@@ -1,7 +1,7 @@
 package router
 
 import 	"github.com/gorilla/mux"
-import controler "github.com/tsrnd/goweb3/app/controllers"
+import controler "github.com/goweb3/app/controllers"
 
 func Init() *mux.Router {
 	r := mux.NewRouter()
