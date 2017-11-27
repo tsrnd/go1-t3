@@ -56,11 +56,14 @@
 		}
 	},
 	"Template": {
-		"Root": "templates/layout",
+		"Root": "home/index",
 		"Children": [
+			"templates/layout",
 			"templates/partial/nav",
 			"templates/partial/banner",
-			"templates/partial/footer"
+			"templates/partial/footer",
+			"templates/partial/header",
+			"templates/partial/slider"
 		]
 	},
 	"View": {
