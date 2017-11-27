@@ -1,8 +1,8 @@
 package controller
 
 import "net/http"
-import "github.com/tsrnd/goweb3/app/shared/view"
-import "github.com/tsrnd/goweb3/app/models"
+import "github.com/goweb3/app/shared/view"
+import "github.com/goweb3/app/models"
 import "log"
 
 func HelloWorld(w http.ResponseWriter, r *http.Request){

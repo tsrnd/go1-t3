@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/webExample/app/shared/database"
+	"github.com/goweb3/app/shared/database"
 	"time"
 )
 

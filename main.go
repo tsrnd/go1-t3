@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"os"
 	"encoding/json"
-	route "github.com/tsrnd/goweb3/app/routers"
-	"github.com/tsrnd/goweb3/app/shared/jsonconfig"
-	"github.com/tsrnd/goweb3/app/shared/view"
-	"github.com/tsrnd/goweb3/app/shared/database"
+	route "github.com/goweb3/app/routers"
+	"github.com/goweb3/app/shared/jsonconfig"
+	"github.com/goweb3/app/shared/view"
+	"github.com/goweb3/app/shared/database"
 )
 var config = &configuration{}
 
