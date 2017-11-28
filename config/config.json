@@ -63,7 +63,14 @@
 			"templates/partial/banner",
 			"templates/partial/footer",
 			"templates/partial/header",
-			"templates/partial/slider"
+			"templates/partial/slider",
+			"templates/partial/left-sidebar",
+			"templates/partial/category-tab",
+			"templates/partial/recommend-item",
+			"templates/partial/feature-item",
+			"templates/partial/top-advertisement",
+			"templates/partial/breadcrumb",
+			"templates/partial/product-detail"
 		]
 	},
 	"View": {

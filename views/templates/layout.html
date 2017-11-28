@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Title</title>
+    <title>{{template "title" .}}</title>
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
     <link href="/assets/css/prettyPhoto.css" rel="stylesheet">
@@ -29,14 +29,10 @@
 <body>
     {{template "header.html" .}}
     <!--/header-->
-
-    {{template "slider.html" .}}
-    <!--/slider-->
     
     {{template "content" .}}
     <!-- /content -->
     
-
     {{template "footer.html" .}}
     <!--/Footer-->
 

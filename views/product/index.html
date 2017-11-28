@@ -1,23 +1,22 @@
-{{ define "title" }} Home title {{ end }}
+{{ define "title" }} Product detail title {{ end }}
 {{ define "content" }}
-
-{{template "slider.html" .}}
-<!--/slider-->
 <section>
     <div class="container">
         <div class="row">
             {{template "left-sidebar.html" .}}
             <!-- /Left sidebar -->
-            
+
             <div class="col-sm-9 padding-right">
-                {{template "feature-item.html" .}}
-                <!--features_items-->
+                
+                {{template "product-detail.html" .}}
+                <!--/product-details-->
 
                 {{template "category-tab.html" .}}
                 <!--/category-tab-->
 
                 {{template "recommend-item.html" .}}
                 <!--/recommended-items-->
+
             </div>
         </div>
     </div>
