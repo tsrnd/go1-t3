@@ -11,7 +11,7 @@ type User struct {
 	Email string			`db:"email" bson:"email"`
 	CreatedAt time.Time     `db:"created_at" bson:"created_at"`
 	UpdatedAt time.Time     `db:"updated_at" bson:"updated_at"`
-	Deleted   time.Time     `db:"deleted" bson:"deleted"`
+	DeletedAt time.Time     `db:"deleted_at" bson:"deleted_at"`
 }
 
 func(user *User) FindByName(name string) (error) {
