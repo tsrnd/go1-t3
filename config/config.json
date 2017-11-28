@@ -56,11 +56,21 @@
 		}
 	},
 	"Template": {
-		"Root": "templates/layout",
+		"Root": "home/index",
 		"Children": [
+			"templates/layout",
 			"templates/partial/nav",
 			"templates/partial/banner",
-			"templates/partial/footer"
+			"templates/partial/footer",
+			"templates/partial/header",
+			"templates/partial/slider",
+			"templates/partial/left-sidebar",
+			"templates/partial/category-tab",
+			"templates/partial/recommend-item",
+			"templates/partial/feature-item",
+			"templates/partial/top-advertisement",
+			"templates/partial/breadcrumb",
+			"templates/partial/product-detail"
 		]
 	},
 	"View": {
