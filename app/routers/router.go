@@ -9,5 +9,7 @@ func Init() *mux.Router {
 	r.PathPrefix("/assets/").HandlerFunc(controler.Static)	
 	// r.HandleFunc("/assets/**", controler.Static)
 	r.HandleFunc("/", controler.HelloWorld).Methods("GET")
+	r.HandleFunc("/login", controler.LoginGet).Methods("GET")
+	r.HandleFunc("/login", controler.LoginPost).Methods("POST")
 	return r
 }
