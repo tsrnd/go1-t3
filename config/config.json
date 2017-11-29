@@ -15,9 +15,9 @@
 				"Parameter": "?parseTime=true"
 			},
 			"Postgres": {
-				"Username": "default",
-				"Password": "secret",
-				"Name": "default",
+				"Username": "postgres",
+				"Password": "1",
+				"Name": "eshop",
 				"Hostname": "127.0.0.1",
 				"Port": 5432
 			}
@@ -36,17 +36,12 @@
 		"SiteKey": ""
 	},
 	"Server": {
-		"Hostname": "",
-		"UseHTTP": true,
-		"UseHTTPS": false,
-		"Port": 8080,
-		"HTTPSPort": 443,
-		"CertFile": "tls/server.crt",
-		"KeyFile": "tls/server.key"
+		"Hostname": "localhost",
+		"Port": 8080
 	},
 	"Session": {
 		"SecretKey": "@r4B?EThaSEh_drudR7P_hub=s#s2Pah",
-		"Name": "gosess",
+		"Name": "eshop",
 		"Options": {
 			"Path": "/",
 			"Domain": "",

@@ -5,6 +5,7 @@ import (
 	"github.com/goweb3/app/shared/session"
 	"net/http"
 	"github.com/goweb3/app/shared/passhash"
+	"github.com/goweb3/app/shared/view"
 )
 
 /**
@@ -22,11 +23,14 @@ func Auth(w http.ResponseWriter, r *http.Request) error {
 	if (err == nil && passhash.MatchString(user.Password, password)) {
 		// Login successfully
 		session.Empty(sess)
+		sess.AddFlash(view.Flash{"Login success", view.FlashSuccess})
 		sess.Values["id"] = user.Id
 		sess.Values["email"] = user.Email
 		sess.Values["name"] = user.Name
 		sess.Save(r, w)
-		return nil		
+		return nil	
 	}
+	sess.AddFlash(view.Flash{"Login fail", view.FlashError})
+	sess.Save(r, w)
 	return err
 }

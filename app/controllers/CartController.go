@@ -11,6 +11,11 @@ import (
 	"github.com/goweb3/app/shared/view"
 )
 
+/**
+* Get cart
+*
+* return cart view
+**/
 func Cart(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
 	v.Name = "cart/index"
