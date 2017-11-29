@@ -1,10 +1,12 @@
 package router
 
 import "github.com/gorilla/mux"
+import "github.com/gorilla/csrf"
+import "net/http"
 import controler "github.com/goweb3/app/controllers"
 import middleware "github.com/goweb3/app/middlewares"
 
-func Init() *mux.Router {
+func routes() *mux.Router {
 	r := mux.NewRouter()
 	// Serve static files, no directory browsing
 	r.PathPrefix("/assets/").HandlerFunc(controler.Static)
@@ -17,5 +19,15 @@ func Init() *mux.Router {
 	r.HandleFunc("/cart", controler.Cart).Methods("GET")
 	r.HandleFunc("/checkout", controler.Checkout).Methods("GET")
 	r.HandleFunc("/register", middleware.Chain(controler.Register, middleware.ValidateRegisterFormMiddleware())).Methods("POST")
+	r.HandleFunc("/login", controler.LoginPost).Methods("POST")
 	return r
+}
+
+func HTTP() http.Handler {
+	return middleware(routes())
+}
+
+func middleware(h http.Handler) http.Handler {
+	CSRF := csrf.Protect([]byte("32-byte-long-auth-key"), csrf.Secure(false), csrf.CookieName("_csrf"))
+	return CSRF(h)
 }

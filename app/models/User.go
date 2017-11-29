@@ -4,6 +4,7 @@ import (
 	"github.com/goweb3/app/shared/database"
 	"time"
 	"golang.org/x/crypto/bcrypt"
+
 )
 
 type User struct {
@@ -16,6 +17,10 @@ type User struct {
 	DeletedAt time.Time     `db:"deleted_at" bson:"deleted_at"`
 }
 
+/**
+*
+* Hash password of user
+**/
 func (user *User) HashPassword() (error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	if err == nil {
@@ -24,12 +29,20 @@ func (user *User) HashPassword() (error) {
 	return err
 }
 
+/**
+*
+* Find user by name
+**/
 func(user *User) FindByName(name string) (error) {
 	var err error
 	err = database.SQL.QueryRow("SELECT id, name, email FROM users WHERE name = $1", name).Scan(&user.Id, &user.Name, &user.Email)
 	return err
 }
 
+/**
+*
+* Create user
+**/
 func(user *User) Create() (err error) {
 	statement := "insert into users (name, email, password) values ($1, $2, $3) returning id"
 	stmt, err := database.SQL.Prepare(statement)
@@ -41,8 +54,11 @@ func(user *User) Create() (err error) {
 	return
 }
 
-func(user *User) CheckExistEmail(email string) (error) {
-	var err error
-	err = database.SQL.QueryRow("SELECT id, name, email FROM users WHERE email = $1", email).Scan(&user.Id, &user.Name, &user.Email)
+/**
+*
+* Find user by Email
+**/
+func (user *User) FindByEmail(email string) (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.Id, &user.Name, &user.Email, &user.Password)
 	return err
 }
