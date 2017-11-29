@@ -23,7 +23,7 @@ type configuration struct {
 func main() {
 	// Load the configuration file
 	jsonconfig.Load("config"+string(os.PathSeparator)+"config.json", config)
-	// database.Connect(config.Database)
+	database.Connect(config.Database)
 	// Setup the views
 	view.Configure(config.View)
 	view.LoadTemplates(config.Template.Root, config.Template.Children)
