@@ -25,6 +25,6 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusFound)
 	} else {
-		http.Redirect(w, r, "/login", http.StatusFound)
+		Login(w, r)
 	}
 }

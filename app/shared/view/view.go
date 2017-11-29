@@ -5,8 +5,18 @@ import "html/template"
 import "os"
 import "path/filepath"
 import "sync"
+import "github.com/goweb3/app/shared/session"
 
 var (
+	// FlashError is a bootstrap class
+	FlashError = "alert-danger"
+	// FlashSuccess is a bootstrap class
+	FlashSuccess = "alert-success"
+	// FlashNotice is a bootstrap class
+	FlashNotice = "alert-info"
+	// FlashWarning is a bootstrap class
+	FlashWarning = "alert-warning"
+
 	viewInfo View
 	childTemplates     []string
 	rootTemplate       string
@@ -29,6 +39,11 @@ type View struct {
 	Caching   bool
 	Vars      map[string]interface{}
 	request   *http.Request
+}
+// Flash Message
+type Flash struct {
+	Message string
+	Class   string
 }
 
 // Configure sets the view information
@@ -89,6 +104,21 @@ func (v *View) Render(res http.ResponseWriter) {
 	if err != nil {
 		http.Error(res, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
 		return
+	}
+	// Get session
+	sess := session.Instance(v.request)
+	// Get the flashes for the template
+	if flashes := sess.Flashes(); len(flashes) > 0 {
+		v.Vars["flashes"] = make([]Flash, len(flashes))
+		for i, f := range flashes {
+			switch f.(type) {
+				case Flash:
+					v.Vars["flashes"].([]Flash)[i] = f.(Flash)
+				default:
+					v.Vars["flashes"].([]Flash)[i] = Flash{f.(string), "alert-box"}
+				}
+		}
+		sess.Save(v.request, res)
 	}
 	err = templates.ExecuteTemplate(res, "layout."+v.Extension, v.Vars)
 	if err != nil {
