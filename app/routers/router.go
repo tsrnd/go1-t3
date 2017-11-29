@@ -4,7 +4,7 @@ import "github.com/gorilla/mux"
 import "github.com/gorilla/csrf"
 import "net/http"
 import controler "github.com/goweb3/app/controllers"
-import middleware "github.com/goweb3/app/middlewares"
+import middlewares "github.com/goweb3/app/middlewares"
 
 func routes() *mux.Router {
 	r := mux.NewRouter()
@@ -18,7 +18,7 @@ func routes() *mux.Router {
 	r.HandleFunc("/shoe", controler.Login).Methods("GET")
 	r.HandleFunc("/cart", controler.Cart).Methods("GET")
 	r.HandleFunc("/checkout", controler.Checkout).Methods("GET")
-	r.HandleFunc("/register", middleware.Chain(controler.Register, middleware.ValidateRegisterFormMiddleware())).Methods("POST")
+	r.HandleFunc("/register", middlewares.Chain(controler.Register, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
 	r.HandleFunc("/login", controler.LoginPost).Methods("POST")
 	return r
 }

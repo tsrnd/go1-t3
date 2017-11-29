@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"strings"
 	"net/http"
 	"github.com/goweb3/app/models"
@@ -31,7 +30,7 @@ func ValidateRegisterFormMiddleware() Middleware {
 				message["email-required"] = "Email field is required"
 			} else {
 				user := models.User{}	
-				err := user.CheckExistEmail(email)
+				err := user.FindByEmail(email)
 				if  err == nil {
 					message["email-exist"] = "Email already exists"
 				}

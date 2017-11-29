@@ -33,9 +33,10 @@ r.HandleFunc("/register", middleware.Chain(controler.Login, middleware.ValidateR
                     <!--sign up form-->
                     <h2>New User Signup!</h2>
                     <form action="/register" method="post">
-                        <input type="text" name="name" placeholder="Name" />
-                        <input type="email" name="email" placeholder="Email Address" />
-                        <input type="password" name="password" placeholder="Password" />
+                        <input type="text" name="name" placeholder="Name" required />
+                        <input type="email" name="email" placeholder="Email Address" required />
+                        <input type="password" name="password" placeholder="Password" required />
+                        {{.csrfField}}                        
                         <button type="submit" class="btn btn-default">Signup</button>
                     </form>
                 </div>

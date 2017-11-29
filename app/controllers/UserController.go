@@ -16,15 +16,16 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		time.Time{},
 		time.Time{},
 	}
+	message, statusCode := make([] string, 0), http.StatusOK
 	err := user.HashPassword()
-	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusFound)
-		return		
+	if err == nil {
+		message = append(message, "Password cannot hash!")
+		statusCode = http.StatusFound
 	}
 	err = user.Create()	
 	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusFound)
-		return		
+		message = append(message, "User cannot create. Please try again!")
+		statusCode = http.StatusFound		
 	}
-	http.Redirect(w, r, "/login", http.StatusOK)
+	http.Redirect(w, r, "/login", statusCode)
 }
