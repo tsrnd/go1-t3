@@ -36,17 +36,12 @@
 		"SiteKey": ""
 	},
 	"Server": {
-		"Hostname": "",
-		"UseHTTP": true,
-		"UseHTTPS": false,
-		"HTTPPort": 80,
-		"HTTPSPort": 443,
-		"CertFile": "tls/server.crt",
-		"KeyFile": "tls/server.key"
+		"Hostname": "localhost",
+		"Port": 8080
 	},
 	"Session": {
 		"SecretKey": "@r4B?EThaSEh_drudR7P_hub=s#s2Pah",
-		"Name": "gosess",
+		"Name": "eshop",
 		"Options": {
 			"Path": "/",
 			"Domain": "",
