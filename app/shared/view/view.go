@@ -7,6 +7,15 @@ import "path/filepath"
 import "sync"
 
 var (
+	// FlashError is a bootstrap class
+	FlashError = "alert-danger"
+	// FlashSuccess is a bootstrap class
+	FlashSuccess = "alert-success"
+	// FlashNotice is a bootstrap class
+	FlashNotice = "alert-info"
+	// FlashWarning is a bootstrap class
+	FlashWarning = "alert-warning"
+
 	viewInfo View
 	childTemplates     []string
 	rootTemplate       string
@@ -29,6 +38,11 @@ type View struct {
 	Caching   bool
 	Vars      map[string]interface{}
 	request   *http.Request
+}
+// Flash Message
+type Flash struct {
+	Message string
+	Class   string
 }
 
 // Configure sets the view information
@@ -90,6 +104,7 @@ func (v *View) Render(res http.ResponseWriter) {
 		http.Error(res, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// get flash message
 	err = templates.ExecuteTemplate(res, "layout."+v.Extension, v.Vars)
 	if err != nil {
 		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)
