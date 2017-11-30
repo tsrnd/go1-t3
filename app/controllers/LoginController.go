@@ -28,3 +28,12 @@ func LoginPost(w http.ResponseWriter, r *http.Request) {
 		Login(w, r)
 	}
 }
+
+/**
+*
+*
+**/
+func Logout(w http.ResponseWriter, r *http.Request) {
+	service.Logout(w, r)
+	http.Redirect(w, r, "/", http.StatusFound)
+}
