@@ -7,6 +7,7 @@ import (
 	"github.com/jianfengye/web-golang/web/session"
 	"strconv"
 	"github.com/goweb3/app/shared/flash"
+	"time"
 	"errors"
 )
 
@@ -32,4 +33,18 @@ func Auth(w http.ResponseWriter, r *http.Request) error {
 	}
 	flash.SetFlash(w, flash.Flash{"Login fail!", flash.FlashError})
 	return errors.New("")
+}
+
+/**
+*
+*
+**/
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := r.Cookie(session.CookieName)
+	if cookie != nil {
+		sessionid := cookie.Value
+		session.Sessions[sessionid] = nil
+		dc := &http.Cookie{Name: session.CookieName, MaxAge: -1, Expires: time.Unix(1, 0)}
+		http.SetCookie(w, dc)
+	}
 }

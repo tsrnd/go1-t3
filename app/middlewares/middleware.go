@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"strings"
 	"net/http"
 	"github.com/goweb3/app/models"
@@ -67,7 +66,7 @@ func LoginMiddleware() Middleware {
 			return func(w http.ResponseWriter, r *http.Request) {
 				sess,_ := session.SessionStart(r, w)
 				if sess.Get("id") == "" ||	sess.Get("name") == "" || sess.Get("email") == "" {
-					flash.SetFlash(w, "warning", []byte("You are not logged in. Please login!"))
+					flash.SetFlash(w, flash.Flash{"You are not logged in. Please login!", flash.FlashWarning})
 					http.Redirect(w, r, "/login", http.StatusFound)	
 					return
 				}
