@@ -1,17 +1,19 @@
 package middleware
 
 import (
+	"fmt"
 	"strings"
 	"net/http"
 	"github.com/goweb3/app/models"
-	
+	"github.com/jianfengye/web-golang/web/session"	
+	"github.com/goweb3/app/shared/flash"	
 )
 
 
 
 type Middleware func(http.HandlerFunc) http.HandlerFunc
 
-// ValidateRegisterFormMiddleware check user loginned or not
+// ValidateRegisterFormMiddleware check validate register form
 func ValidateRegisterFormMiddleware() Middleware {
 
 	// Create a new Middleware
@@ -54,6 +56,27 @@ func ValidateRegisterFormMiddleware() Middleware {
 		}
 	}
 }
+
+// LoginMiddleware check user loginned or not
+func LoginMiddleware() Middleware {
+	
+		// Create a new Middleware
+		return func(f http.HandlerFunc) http.HandlerFunc {
+	
+			// Define the http.HandlerFunc
+			return func(w http.ResponseWriter, r *http.Request) {
+				fmt.Println("eeeeee")
+				sess,_ := session.SessionStart(r, w)
+				if sess.Get("id") == "" ||	sess.Get("name") == "" || sess.Get("email") == "" {
+					flash.SetFlash(w, "warning", []byte("You are not logged in. Please login!"))
+					http.Redirect(w, r, "/login", http.StatusFound)	
+					return
+				}
+				
+				f(w, r)
+			}
+		}
+	}
 
 
 // Chain applies middlewares to a http.HandlerFunc
