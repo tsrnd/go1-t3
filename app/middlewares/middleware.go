@@ -26,28 +26,33 @@ func ValidateRegisterFormMiddleware() Middleware {
 			email := strings.Trim(r.Form["email"][0], " ")
 			name := strings.Trim(r.Form["name"][0], " ")
 			password := strings.Trim(r.Form["password"][0], " ")
-			message := make(map[string] string)
-			
+			isPass := true			
 			if len(email)==0 {
-				message["email-required"] = "Email field is required"
+				flash.SetFlash(w, "email-required", []byte("Email field is required!"))	
+				isPass = false			
 			} else {
 				user := models.User{}	
 				err := user.FindByEmail(email)
 				if  err == nil {
-					message["email-exist"] = "Email already exists"
+					flash.SetFlash(w, "email-exist", []byte("Email already exists!"))	
+					isPass = false
 				}
 			}
 			if len(name) == 0 {
-				message["name-required"] = "Name field is required"
+				flash.SetFlash(w, "name-required", []byte("Name field is required!"))	
+				isPass = false
 			}
 			if len(password) == 0 {
-				message["password-required"] = "Password field is required"
+				flash.SetFlash(w, "password-required", []byte("Password field is required!"))	
+				isPass = false
 			} else if len(password) <= 4 {
-				message["password-min"] = "Password must be greater than 4 characters"				
+				flash.SetFlash(w, "password-min", []byte("Password must be greater than 4 characters!"))	
+				isPass = false
 			} else if len(password) > 20 {
-				message["password-max"] = "Password must be less than 20 characters"				
+				flash.SetFlash(w, "password-max", []byte("Password must be less than 20 characters!"))	
+				isPass = false
 			}
-			if (len(message) != 0) {		
+			if (!isPass) {		
 				http.Redirect(w, r, "/login", http.StatusFound)	
 				return
 			}
@@ -65,7 +70,6 @@ func LoginMiddleware() Middleware {
 	
 			// Define the http.HandlerFunc
 			return func(w http.ResponseWriter, r *http.Request) {
-				fmt.Println("eeeeee")
 				sess,_ := session.SessionStart(r, w)
 				if sess.Get("id") == "" ||	sess.Get("name") == "" || sess.Get("email") == "" {
 					flash.SetFlash(w, "warning", []byte("You are not logged in. Please login!"))
