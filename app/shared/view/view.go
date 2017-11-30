@@ -5,17 +5,9 @@ import "html/template"
 import "os"
 import "path/filepath"
 import "sync"
+import "github.com/goweb3/app/shared/flash"
 
 var (
-	// FlashError is a bootstrap class
-	FlashError = "alert-danger"
-	// FlashSuccess is a bootstrap class
-	FlashSuccess = "alert-success"
-	// FlashNotice is a bootstrap class
-	FlashNotice = "alert-info"
-	// FlashWarning is a bootstrap class
-	FlashWarning = "alert-warning"
-
 	viewInfo View
 	childTemplates     []string
 	rootTemplate       string
@@ -39,11 +31,6 @@ type View struct {
 	Vars      map[string]interface{}
 	request   *http.Request
 }
-// Flash Message
-type Flash struct {
-	Message string
-	Class   string
-}
 
 // Configure sets the view information
 func Configure(vi View) {
@@ -60,6 +47,11 @@ func LoadTemplates(rootTemp string, childTemps []string) {
 	childTemplates = childTemps
 }
 
+/**
+*
+* Constructor View
+*
+**/
 func New(req *http.Request) *View {
 	v := &View{}
 	v.Vars = make(map[string]interface{})
@@ -79,6 +71,11 @@ func New(req *http.Request) *View {
 	return v
 }
 
+/**
+*
+* Render view from controller
+*
+**/
 func (v *View) Render(res http.ResponseWriter) {
 
 	var templateList []string
@@ -105,6 +102,12 @@ func (v *View) Render(res http.ResponseWriter) {
 		return
 	}
 	// get flash message
+	fm, err := flash.GetFlash(res, v.request)
+	if err == nil && (flash.Flash{}) != fm {
+		var flashes = make([]flash.Flash, 1)
+		flashes = append(flashes, fm)
+		v.Vars["flashes"] = flashes
+	}
 	err = templates.ExecuteTemplate(res, "layout."+v.Extension, v.Vars)
 	if err != nil {
 		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)

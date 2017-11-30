@@ -23,8 +23,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func LoginPost(w http.ResponseWriter, r *http.Request) {
 	err := service.Auth(w, r)
 	if err == nil {
-		http.Redirect(w, r, "/", http.StatusFound)
+		http.Redirect(w, r, "/", http.StatusOK)
 	} else {
-		Login(w, r)
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
 }
