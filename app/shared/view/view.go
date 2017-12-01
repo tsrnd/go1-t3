@@ -1,7 +1,6 @@
 package view
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -126,6 +125,5 @@ func (v *View) Render(res http.ResponseWriter) {
 *
 **/
 func GetUrl(r *http.Request) string {
-	fmt.Println("Req: %s %s\n", r.Host, r.URL.Path)
 	return r.URL.Path
 }
