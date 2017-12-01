@@ -19,6 +19,7 @@ func routes() *mux.Router {
 	r.HandleFunc("/checkout", controler.Checkout).Methods("GET")
 	r.HandleFunc("/register", middlewares.Chain(controler.Register, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
 	r.HandleFunc("/login", controler.LoginPost).Methods("POST")
+	r.HandleFunc("/logout", controler.Logout).Methods("GET")
 
 	// Cart
 	r.HandleFunc("/cart", controler.Cart).Methods("GET")

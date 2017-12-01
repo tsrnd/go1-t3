@@ -8,7 +8,6 @@ import (
 	"github.com/goweb3/app/shared/jsonconfig"
 	"github.com/goweb3/app/shared/view"
 	"github.com/goweb3/app/shared/server"
-	"github.com/goweb3/app/shared/session"
 	
 )
 
@@ -20,15 +19,12 @@ type configuration struct {
 	Template view.Template `json:"Template"`
 	View     view.View     `json:"View"`
 	Server   server.Server `json:"Server"`
-	Session   session.Session `json:"Session"`
 }
 
 func main() {
 	// Load the configuration file
 	jsonconfig.Load("config"+string(os.PathSeparator)+"config.json", config)
 	database.Connect(config.Database)
-	// Configure the session cookie store
-	session.Configure(config.Session)
 	// Setup the views
 	view.Configure(config.View)
 	view.LoadTemplates(config.Template.Root, config.Template.Children)

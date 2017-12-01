@@ -15,9 +15,9 @@
 				"Parameter": "?parseTime=true"
 			},
 			"Postgres": {
-				"Username": "postgres",
-				"Password": "1",
-				"Name": "eshop",
+				"Username": "default",
+				"Password": "secret",
+				"Name": "default",
 				"Hostname": "127.0.0.1",
 				"Port": 5432
 			}
@@ -38,17 +38,6 @@
 	"Server": {
 		"Hostname": "localhost",
 		"Port": 8080
-	},
-	"Session": {
-		"SecretKey": "@r4B?EThaSEh_drudR7P_hub=s#s2Pah",
-		"Name": "eshop",
-		"Options": {
-			"Path": "/",
-			"Domain": "",
-			"MaxAge": 28800,
-			"Secure": false,
-			"HttpOnly": true
-		}
 	},
 	"Template": {
 		"Root": "home/index",

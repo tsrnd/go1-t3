@@ -1,11 +1,15 @@
 package service
 
 import (
-	model "github.com/goweb3/app/models"
-	"github.com/goweb3/app/shared/session"
+	"errors"
 	"net/http"
+	"strconv"
+	"time"
+
+	model "github.com/goweb3/app/models"
+	"github.com/goweb3/app/shared/flash"
 	"github.com/goweb3/app/shared/passhash"
-	"github.com/goweb3/app/shared/view"
+	"github.com/jianfengye/web-golang/web/session"
 )
 
 /**
@@ -19,18 +23,29 @@ func Auth(w http.ResponseWriter, r *http.Request) error {
 	var err error
 	user := model.User{Email: email, Password: password}
 	err = user.FindByEmail(email)
-	sess := session.Instance(r)
-	if (err == nil && passhash.MatchString(user.Password, password)) {
+	sess, _ := session.SessionStart(r, w)
+	if err == nil && passhash.MatchString(user.Password, password) {
 		// Login successfully
-		session.Empty(sess)
-		sess.AddFlash(view.Flash{"Login success", view.FlashSuccess})
-		sess.Values["id"] = user.Id
-		sess.Values["email"] = user.Email
-		sess.Values["name"] = user.Name
-		sess.Save(r, w)
-		return nil	
+		flash.SetFlash(w, flash.Flash{"Login success!", flash.FlashSuccess})
+		sess.Set("id", strconv.Itoa(user.Id))
+		sess.Set("email", user.Email)
+		sess.Set("name", user.Name)
+		return nil
 	}
-	sess.AddFlash(view.Flash{"Login fail", view.FlashError})
-	sess.Save(r, w)
-	return err
+	flash.SetFlash(w, flash.Flash{"Login fail!", flash.FlashError})
+	return errors.New("")
+}
+
+/**
+*
+*
+**/
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := r.Cookie(session.CookieName)
+	if cookie != nil {
+		sessionid := cookie.Value
+		session.Sessions[sessionid] = nil
+		dc := &http.Cookie{Name: session.CookieName, MaxAge: -1, Expires: time.Unix(1, 0)}
+		http.SetCookie(w, dc)
+	}
 }

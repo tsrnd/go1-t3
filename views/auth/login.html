@@ -13,7 +13,7 @@ r.HandleFunc("/register", middleware.Chain(controler.Login, middleware.ValidateR
                 <div class="login-form">
                     <!--login form-->
                     <h2>Login to your account</h2>
-                    <form action="#" method="POST">
+                    <form action="/login" method="POST">
                         <input type="email" name="email" placeholder="Email Address" />
                         <input type="password" placeholder="Password" name="password"/>
                         {{.csrfField}}
