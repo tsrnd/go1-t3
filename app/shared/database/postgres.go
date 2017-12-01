@@ -1,9 +1,10 @@
 package database
 
 import (
-	"database/sql"
 	_ "github.com/lib/pq"
-	"fmt"	
+	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 type PostgresInfo struct {
 	Username string
@@ -12,10 +13,12 @@ type PostgresInfo struct {
 	Hostname string
 	Port int
 }
-func (p PostgresInfo) connect() (*sql.DB, error) {
+func (p PostgresInfo) connect() (*gorm.DB, error) {
 	psqlInfo := dnsInfo(p)
-	db, err := sql.Open("postgres", psqlInfo)
+	db, err := gorm.Open("postgres", psqlInfo)
+	
 	if err != nil {
+		fmt.Println("err connect database", err)
 		panic(err)
 	}
 	return db, err
