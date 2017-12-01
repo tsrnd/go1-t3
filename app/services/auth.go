@@ -1,14 +1,14 @@
 package service
 
 import (
-	model "github.com/goweb3/app/models"
+	"errors"
 	"net/http"
+	"fmt"
+	"time"
+	model "github.com/goweb3/app/models"
+	"github.com/goweb3/app/shared/flash"
 	"github.com/goweb3/app/shared/passhash"
 	"github.com/jianfengye/web-golang/web/session"
-	"strconv"
-	"github.com/goweb3/app/shared/flash"
-	"time"
-	"errors"
 )
 
 /**
@@ -22,14 +22,14 @@ func Auth(w http.ResponseWriter, r *http.Request) error {
 	var err error
 	user := model.User{Email: email, Password: password}
 	err = user.FindByEmail(email)
-	sess,_ := session.SessionStart(r, w)
-	if (err == nil && passhash.MatchString(user.Password, password)) {
+	sess, _ := session.SessionStart(r, w)
+	if err == nil && passhash.MatchString(user.Password, password) {
 		// Login successfully
 		flash.SetFlash(w, flash.Flash{"Login success!", flash.FlashSuccess})
-		sess.Set("id", strconv.Itoa(user.Id))
+		sess.Set("id", fmt.Sprint(user.ID))
 		sess.Set("email", user.Email)
 		sess.Set("name", user.Name)
-		return nil	
+		return nil
 	}
 	flash.SetFlash(w, flash.Flash{"Login fail!", flash.FlashError})
 	return errors.New("")

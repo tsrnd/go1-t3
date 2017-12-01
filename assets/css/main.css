@@ -2527,4 +2527,28 @@ h2.title {
   color: #FE980F;
 }
 
+/* Flash message */
+#flash-container {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  margin: auto;
+  z-index: 10;
+  height: 0px;
+}
+
+#flash-message {
+  display: none;
+  -webkit-animation: fadeinout 4s linear forwards;
+  animation: fadeinout 4s linear forwards;
+}
+
+.alert {
+  width: 400px;
+  margin: auto;
+  border-radius: 0px;
+  margin-top: 50px;
+  display: block;
+}
+
 
