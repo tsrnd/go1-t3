@@ -27,4 +27,9 @@ $(document).ready(function(){
 	        zIndex: 2147483647 // Z-Index for the overlay
 		});
 	});
+	$(function () {
+		$('#flash-message').delay(100).fadeIn('normal', function () {
+			$(this).delay(3000).fadeOut();
+		});
+	});
 });
