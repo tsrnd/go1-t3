@@ -4,27 +4,15 @@ import "net/http"
 import "html/template"
 import "os"
 import "path/filepath"
-import "sync"
+import "github.com/goweb3/app/shared/flash"
+import "strings"
 
 var (
-	// FlashError is a bootstrap class
-	FlashError = "alert-danger"
-	// FlashSuccess is a bootstrap class
-	FlashSuccess = "alert-success"
-	// FlashNotice is a bootstrap class
-	FlashNotice = "alert-info"
-	// FlashWarning is a bootstrap class
-	FlashWarning = "alert-warning"
-
 	viewInfo View
 	childTemplates     []string
 	rootTemplate       string
-	pluginCollection   = make(template.FuncMap)
-	templateCollection = make(map[string]*template.Template)	
-	mutex              sync.RWMutex
-	mutexPlugins       sync.RWMutex
-	
 )
+
 type Template struct {
 	Root     string   `json:"Root"`
 	Children []string `json:"Children"`
@@ -38,11 +26,6 @@ type View struct {
 	Caching   bool
 	Vars      map[string]interface{}
 	request   *http.Request
-}
-// Flash Message
-type Flash struct {
-	Message string
-	Class   string
 }
 
 // Configure sets the view information
@@ -60,6 +43,11 @@ func LoadTemplates(rootTemp string, childTemps []string) {
 	childTemplates = childTemps
 }
 
+/**
+*
+* Constructor View
+*
+**/
 func New(req *http.Request) *View {
 	v := &View{}
 	v.Vars = make(map[string]interface{})
@@ -79,6 +67,11 @@ func New(req *http.Request) *View {
 	return v
 }
 
+/**
+*
+* Render view from controller
+*
+**/
 func (v *View) Render(res http.ResponseWriter) {
 
 	var templateList []string
@@ -105,7 +98,15 @@ func (v *View) Render(res http.ResponseWriter) {
 		return
 	}
 	// get flash message
-	err = templates.ExecuteTemplate(res, "layout."+v.Extension, v.Vars)
+	fm, err := flash.GetFlash(res, v.request)
+	if err == nil && (flash.Flash{}) != fm {
+		var flashes = make([]flash.Flash, 1)
+		flashes = append(flashes, fm)
+		v.Vars["flashes"] = flashes
+	}
+	strs := strings.Split(rootTemplate, "/")
+	layout := strs[len(strs) -1]
+	err = templates.ExecuteTemplate(res, layout+"."+v.Extension, v.Vars)
 	if err != nil {
 		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)
 	}

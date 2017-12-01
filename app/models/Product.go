@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 	"github.com/goweb3/app/shared/database"
+	"database/sql"
 	
 )
 type Product struct {
@@ -56,9 +57,10 @@ func (product *Product) Limit(limit int) (products []Product, err error) {
 		return
 	}
 	defer rows.Close()
+	var a_string sql.NullString
 	for rows.Next() {
         product := Product{}
-		err = rows.Scan(&product.Id, &product.Name, &product.Description, &product.Quantity, &product.Price, &product.CreatedAt, &product.UpdatedAt, &product.DeletedAt)
+		err = rows.Scan(&product.Id, &product.Name, &product.Description, &product.Quantity, &product.Price, &product.CreatedAt, &product.UpdatedAt, &a_string)
 		if err != nil {
 			return
 		}
