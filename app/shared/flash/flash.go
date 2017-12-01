@@ -2,10 +2,10 @@ package flash
 
 import (
 	"encoding/base64"
-	"net/http"
-	"time"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"time"
 )
 
 const (
@@ -17,13 +17,13 @@ const (
 	FlashNotice = "alert-info"
 	// FlashWarning is a bootstrap class
 	FlashWarning = "alert-warning"
-	Name = "_flash"
+	Name         = "_flash"
 )
 
 // Flash Message
 type Flash struct {
-	Message string
-	ClassCss   string
+	Message  string
+	ClassCss string
 }
 
 /**
@@ -46,10 +46,10 @@ func GetFlash(w http.ResponseWriter, r *http.Request) (Flash, error) {
 	c, err := r.Cookie(Name)
 	if err != nil {
 		switch err {
-			case http.ErrNoCookie:
-				return flash, nil
-			default:
-				return flash, err
+		case http.ErrNoCookie:
+			return flash, nil
+		default:
+			return flash, err
 		}
 	}
 	value, err := decode(c.Value)
@@ -69,7 +69,7 @@ func GetFlash(w http.ResponseWriter, r *http.Request) (Flash, error) {
 *
 * Encode String to byte
 *
-**/  
+**/
 func encode(src []byte) string {
 	return base64.URLEncoding.EncodeToString(src)
 }
