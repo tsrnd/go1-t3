@@ -5,15 +5,19 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
+
 	"strings"
+
+	service "github.com/goweb3/app/services"
 	"github.com/goweb3/app/shared/flash"
 	"github.com/jianfengye/web-golang/web/session"
 )
 
 var (
-	viewInfo           View
-	childTemplates     []string
-	rootTemplate       string
+	viewInfo       View
+	childTemplates []string
+	rootTemplate   string
 )
 
 type Template struct {
@@ -76,7 +80,7 @@ func New(r *http.Request) *View {
 * Render view from controller
 *
 **/
-func (v *View) Render(res http.ResponseWriter) {
+func (v *View) Render(w http.ResponseWriter) {
 
 	var templateList []string
 	templateList = append(templateList, rootTemplate)
@@ -88,7 +92,7 @@ func (v *View) Render(res http.ResponseWriter) {
 		// Get the absolute path of the root template
 		path, err := filepath.Abs(v.Folder + string(os.PathSeparator) + name + "." + v.Extension)
 		if err != nil {
-			http.Error(res, "Template Path Error: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Template Path Error: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		templateList[i] = path
@@ -96,7 +100,7 @@ func (v *View) Render(res http.ResponseWriter) {
 	// Determine if there is an error in the template syntax
 	templates, err := template.New(v.Name).ParseFiles(templateList...)
 	if err != nil {
-		http.Error(res, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
@@ -104,22 +108,28 @@ func (v *View) Render(res http.ResponseWriter) {
 	v.Vars["url"] = GetUrl(v.request)
 
 	// User name
-	sess, _ := session.SessionStart(v.request, res)
+	sess, _ := session.SessionStart(v.request, w)
 	userName := sess.Get("name")
 	v.Vars["name"] = userName
 
 	// get flash message
-	fm, err := flash.GetFlash(res, v.request)
+	fm, err := flash.GetFlash(w, v.request)
 	if err == nil && (flash.Flash{}) != fm {
 		var flashes = make([]flash.Flash, 0)
 		flashes = append(flashes, fm)
 		v.Vars["flashes"] = flashes
 	}
+
+	// Get count cart product
+	userID, _ := strconv.Atoi(sess.Get("id"))
+	count := service.ProcessGetCountCartProduct(uint(userID))
+	v.Vars["count"] = count
+
 	strs := strings.Split(rootTemplate, "/")
-	layout := strs[len(strs) -1]
-	err = templates.ExecuteTemplate(res, layout+"."+v.Extension, v.Vars)
+	layout := strs[len(strs)-1]
+	err = templates.ExecuteTemplate(w, layout+"."+v.Extension, v.Vars)
 	if err != nil {
-		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Template File Error: "+err.Error(), http.StatusInternalServerError)
 	}
 }
 

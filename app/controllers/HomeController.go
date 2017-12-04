@@ -2,9 +2,10 @@ package controller
 
 import (
 	"log"
-	"github.com/goweb3/app/shared/view"
-	service "github.com/goweb3/app/services"
 	"net/http"
+
+	service "github.com/goweb3/app/services"
+	"github.com/goweb3/app/shared/view"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
