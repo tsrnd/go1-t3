@@ -8,6 +8,7 @@ import (
 	"sync"
 
 	"github.com/goweb3/app/shared/flash"
+	"github.com/jianfengye/web-golang/web/session"
 )
 
 var (
@@ -56,7 +57,7 @@ func LoadTemplates(rootTemp string, childTemps []string) {
 * Constructor View
 *
 **/
-func New(req *http.Request) *View {
+func New(r *http.Request) *View {
 	v := &View{}
 	v.Vars = make(map[string]interface{})
 	v.Vars["AuthLevel"] = "anon"
@@ -70,11 +71,8 @@ func New(req *http.Request) *View {
 	// v.Vars["BaseURI"] = v.BaseURI
 	v.Vars["BaseURI"] = "/"
 
-	// Page url
-	v.Vars["url"] = GetUrl(req)
-
 	// This is required for the view to access the request
-	v.request = req
+	v.request = r
 	return v
 }
 
@@ -106,6 +104,15 @@ func (v *View) Render(res http.ResponseWriter) {
 		http.Error(res, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Page url
+	v.Vars["url"] = GetUrl(v.request)
+
+	// User name
+	sess, _ := session.SessionStart(v.request, res)
+	userName := sess.Get("name")
+	v.Vars["name"] = userName
+
 	// get flash message
 	fm, err := flash.GetFlash(res, v.request)
 	if err == nil && (flash.Flash{}) != fm {
