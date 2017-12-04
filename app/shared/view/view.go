@@ -57,7 +57,7 @@ func LoadTemplates(rootTemp string, childTemps []string) {
 * Constructor View
 *
 **/
-func New(w http.ResponseWriter, r *http.Request) *View {
+func New(r *http.Request) *View {
 	v := &View{}
 	v.Vars = make(map[string]interface{})
 	v.Vars["AuthLevel"] = "anon"
@@ -71,14 +71,6 @@ func New(w http.ResponseWriter, r *http.Request) *View {
 	// v.Vars["BaseURI"] = v.BaseURI
 	v.Vars["BaseURI"] = "/"
 
-	// Page url
-	v.Vars["url"] = GetUrl(r)
-
-	// User name
-	sess, _ := session.SessionStart(r, w)
-	userName := sess.Get("name")
-	v.Vars["name"] = userName
-
 	// This is required for the view to access the request
 	v.request = r
 	return v
@@ -89,7 +81,7 @@ func New(w http.ResponseWriter, r *http.Request) *View {
 * Render view from controller
 *
 **/
-func (v *View) Render(res http.ResponseWriter) {
+func (v *View) Render(w http.ResponseWriter) {
 
 	var templateList []string
 	templateList = append(templateList, rootTemplate)
@@ -101,7 +93,7 @@ func (v *View) Render(res http.ResponseWriter) {
 		// Get the absolute path of the root template
 		path, err := filepath.Abs(v.Folder + string(os.PathSeparator) + name + "." + v.Extension)
 		if err != nil {
-			http.Error(res, "Template Path Error: "+err.Error(), http.StatusInternalServerError)
+			http.Error(w, "Template Path Error: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		templateList[i] = path
@@ -109,19 +101,28 @@ func (v *View) Render(res http.ResponseWriter) {
 	// Determine if there is an error in the template syntax
 	templates, err := template.New(v.Name).ParseFiles(templateList...)
 	if err != nil {
-		http.Error(res, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Page url
+	v.Vars["url"] = GetUrl(v.request)
+
+	// User name
+	sess, _ := session.SessionStart(v.request, w)
+	userName := sess.Get("name")
+	v.Vars["name"] = userName
+
 	// get flash message
-	fm, err := flash.GetFlash(res, v.request)
+	fm, err := flash.GetFlash(w, v.request)
 	if err == nil && (flash.Flash{}) != fm {
 		var flashes = make([]flash.Flash, 0)
 		flashes = append(flashes, fm)
 		v.Vars["flashes"] = flashes
 	}
-	err = templates.ExecuteTemplate(res, "layout."+v.Extension, v.Vars)
+	err = templates.ExecuteTemplate(w, "layout."+v.Extension, v.Vars)
 	if err != nil {
-		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Template File Error: "+err.Error(), http.StatusInternalServerError)
 	}
 }
 

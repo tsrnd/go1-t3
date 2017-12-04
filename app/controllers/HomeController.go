@@ -7,7 +7,7 @@ import (
 )
 
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
-	v := view.New(w, r)
+	v := view.New(r)
 	v.Name = "home/index"
 	v.Render(w)
 }
