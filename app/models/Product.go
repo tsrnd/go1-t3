@@ -9,12 +9,16 @@ type Product struct {
 	gorm.Model
 	Name        string
 	Description string
-	Quantity    int
-	Price       int
+	Quantity    uint
+	Price       uint
 }
 
-func (product *Product) FindById(id int) error {
+/**
+*
+* Find product by product id
+**/
+func (product *Product) FindByID(id uint) error {
 	var err error
-	err = database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE id = $1", id).Scan(&product.ID, &product.Name, &product.Description, &product.Quantity, &product.Price)
+	err = database.SQL.Where("id = ?", id).First(&product).Error
 	return err
 }

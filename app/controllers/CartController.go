@@ -15,7 +15,7 @@ import (
 * return cart view
 **/
 func Cart(w http.ResponseWriter, r *http.Request) {
-	v := view.New(r)
+	v := view.New(w, r)
 	v.Name = "cart/index"
 	v.Render(w)
 }
@@ -26,9 +26,8 @@ func Cart(w http.ResponseWriter, r *http.Request) {
 * return cart
 **/
 func AddToCart(w http.ResponseWriter, r *http.Request) {
-	// data := mux.Vars(r)
 	productID, _ := strconv.Atoi(mux.Vars(r)["id"])
-	err := service.ProcessAddToCard(w, r, productID)
+	err := service.ProcessAddToCard(w, r, uint(productID))
 	if err == nil {
 		http.Redirect(w, r, "/cart", http.StatusSeeOther)
 	} else {

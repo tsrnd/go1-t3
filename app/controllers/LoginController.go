@@ -10,7 +10,7 @@ import service "github.com/goweb3/app/services"
 * Get view Login
 **/
 func Login(w http.ResponseWriter, r *http.Request) {
-	v := view.New(r)
+	v := view.New(w, r)
 	v.Vars[csrf.TemplateTag] = csrf.TemplateField(r)
 	v.Name = "auth/login"
 	v.Render(w)

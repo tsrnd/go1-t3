@@ -10,19 +10,21 @@ type Cart struct {
 	UserID uint `gorm:"index"`
 }
 
+/**
+*
+* Create cart
+**/
 func (cart *Cart) Create() (err error) {
-	statement := "insert into carts (user_id) values ($1) returning id"
-	stmt, err := database.SQL.Prepare(statement)
-	if err != nil {
-		return
-	}
-	defer stmt.Close()
-	err = stmt.QueryRow(cart.UserID).Scan(&cart.ID)
+	err = database.SQL.Create(&cart).Error
 	return
 }
 
-func (cart *Cart) CheckExistCart(userID int) error {
+/**
+*
+* Find cart by user id
+**/
+func (cart *Cart) FindByUserID(userID uint) error {
 	var err error
-	err = database.SQL.QueryRow("SELECT id, user_id FROM carts WHERE user_id = $1", userID).Scan(&cart.ID, &cart.UserID)
+	err = database.SQL.Where("user_id = ?", userID).First(&cart).Error
 	return err
 }
