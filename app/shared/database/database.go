@@ -2,14 +2,15 @@ package database
 
 import (
 	"log"
-	"database/sql"
+	"github.com/jinzhu/gorm"
+	_ "github.com/lib/pq"
 )
 var (
 	// SQL wrapper
-	SQL *sql.DB
+	SQL *gorm.DB
 )
 type congfigure interface {
-	connect() (*sql.DB, error)
+	connect() (*gorm.DB, error)
 }
 const (
 	// TypeBolt is BoltDB
@@ -40,6 +41,6 @@ func Connect(d Info) {
 		log.Println("No registered database in config")
 	}
 }
-func connect(g congfigure) (*sql.DB, error) { 
+func connect(g congfigure) (*gorm.DB, error) { 
 	return g.connect()
 }

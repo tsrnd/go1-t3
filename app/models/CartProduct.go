@@ -2,19 +2,16 @@ package models
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/goweb3/app/shared/database"
+	"github.com/jinzhu/gorm"
 )
 
 type CartProduct struct {
-	ID        int       `db:"id" bson:"id"`
-	CartID    int       `db:"cart_id" bson:"cart_id"`
-	ProductID int       `db:"product_id" bson:"product_id"`
-	Quantity  int       `db:"quantity" bson:"quantity"`
-	CreatedAt time.Time `db:"created_at" bson:"created_at"`
-	UpdatedAt time.Time `db:"updated_at" bson:"updated_at"`
-	DeletedAt time.Time `db:"deleted_at" bson:"deleted_at"`
+	gorm.Model
+	CartID    uint `gorm:"index"`
+	ProductID uint
+	Quantity  uint
 }
 
 func (cartProduct *CartProduct) Create() (err error) {

@@ -1,22 +1,25 @@
 package view
 
-import "net/http"
-import "html/template"
-import "os"
-import "path/filepath"
-import "sync"
-import "github.com/goweb3/app/shared/flash"
+import (
+	"html/template"
+	"net/http"
+	"os"
+	"path/filepath"
+	"sync"
+
+	"github.com/goweb3/app/shared/flash"
+)
 
 var (
-	viewInfo View
+	viewInfo           View
 	childTemplates     []string
 	rootTemplate       string
 	pluginCollection   = make(template.FuncMap)
-	templateCollection = make(map[string]*template.Template)	
+	templateCollection = make(map[string]*template.Template)
 	mutex              sync.RWMutex
 	mutexPlugins       sync.RWMutex
-	
 )
+
 type Template struct {
 	Root     string   `json:"Root"`
 	Children []string `json:"Children"`
@@ -41,6 +44,7 @@ func Configure(vi View) {
 func ReadConfig() View {
 	return viewInfo
 }
+
 // LoadTemplates will set the root and child templates
 func LoadTemplates(rootTemp string, childTemps []string) {
 	rootTemplate = rootTemp
@@ -66,6 +70,9 @@ func New(req *http.Request) *View {
 	// v.Vars["BaseURI"] = v.BaseURI
 	v.Vars["BaseURI"] = "/"
 
+	// Page url
+	v.Vars["url"] = GetUrl(req)
+
 	// This is required for the view to access the request
 	v.request = req
 	return v
@@ -82,8 +89,6 @@ func (v *View) Render(res http.ResponseWriter) {
 	templateList = append(templateList, rootTemplate)
 	templateList = append(templateList, childTemplates...)
 	templateList = append(templateList, v.Name)
-	
-
 
 	// Loop through each template and test the full path
 	for i, name := range templateList {
@@ -104,7 +109,7 @@ func (v *View) Render(res http.ResponseWriter) {
 	// get flash message
 	fm, err := flash.GetFlash(res, v.request)
 	if err == nil && (flash.Flash{}) != fm {
-		var flashes = make([]flash.Flash, 1)
+		var flashes = make([]flash.Flash, 0)
 		flashes = append(flashes, fm)
 		v.Vars["flashes"] = flashes
 	}
@@ -112,4 +117,13 @@ func (v *View) Render(res http.ResponseWriter) {
 	if err != nil {
 		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)
 	}
+}
+
+/**
+*
+* Get page url
+*
+**/
+func GetUrl(r *http.Request) string {
+	return r.URL.Path
 }

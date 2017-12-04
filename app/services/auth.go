@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	model "github.com/goweb3/app/models"
@@ -27,7 +27,7 @@ func Auth(w http.ResponseWriter, r *http.Request) error {
 	if err == nil && passhash.MatchString(user.Password, password) {
 		// Login successfully
 		flash.SetFlash(w, flash.Flash{"Login success!", flash.FlashSuccess})
-		sess.Set("id", strconv.Itoa(user.Id))
+		sess.Set("id", fmt.Sprint(user.ID))
 		sess.Set("email", user.Email)
 		sess.Set("name", user.Name)
 		return nil
