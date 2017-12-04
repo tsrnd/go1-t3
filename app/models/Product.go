@@ -5,12 +5,13 @@ import (
 	"github.com/jinzhu/gorm"
 	
 )
+
 type Product struct {
 	gorm.Model
-	Name string	     		
+	Name        string
 	Description string
-	Quantity int
-	Price int
+	Quantity uint
+	Price uint
 	ProductImages []ProductImage
 }
 
@@ -21,4 +22,13 @@ type Product struct {
 func (product *Product) GetTopProducts() (products []Product, err error) {
 	err = database.SQL.Limit(9).Preload("ProductImages").Find(&products).Error
 	return
+}
+
+/** 
+*	Find product by product id
+**/
+func (product *Product) FindByID(id uint) error {
+	var err error
+	err = database.SQL.Where("id = ?", id).First(&product).Error
+	return err
 }

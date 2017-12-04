@@ -2,14 +2,14 @@ package models
 
 import (
 	"github.com/goweb3/app/shared/database"
-	"golang.org/x/crypto/bcrypt"
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
 	gorm.Model
-	Name string
-	Email string
+	Name     string
+	Email    string
 	Password string
 }
 
@@ -17,7 +17,7 @@ type User struct {
 *
 * Hash password of user
 **/
-func (user *User) HashPassword() (error) {
+func (user *User) HashPassword() error {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
 	if err == nil {
 		user.Password = string(bytes)
@@ -29,7 +29,7 @@ func (user *User) HashPassword() (error) {
 *
 * Find user by name
 **/
-func(user *User) FindByName(name string) (error) {
+func (user *User) FindByName(name string) error {
 	var err error
 	err = database.SQL.Where("name = ?", name).First(&user).Error
 	return err
@@ -39,10 +39,11 @@ func(user *User) FindByName(name string) (error) {
 *
 * Create user
 **/
-func(user *User) Create() (err error) {
+func (user *User) Create() (err error) {
 	err = database.SQL.Create(&user).Error
 	return
 }
+
 /**
 *
 * Find user by Email
