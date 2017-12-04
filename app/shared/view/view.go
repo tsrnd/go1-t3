@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"sync"
-
+	"strings"
 	"github.com/goweb3/app/shared/flash"
 	"github.com/jianfengye/web-golang/web/session"
 )
@@ -15,10 +14,6 @@ var (
 	viewInfo           View
 	childTemplates     []string
 	rootTemplate       string
-	pluginCollection   = make(template.FuncMap)
-	templateCollection = make(map[string]*template.Template)
-	mutex              sync.RWMutex
-	mutexPlugins       sync.RWMutex
 )
 
 type Template struct {
@@ -120,7 +115,9 @@ func (v *View) Render(res http.ResponseWriter) {
 		flashes = append(flashes, fm)
 		v.Vars["flashes"] = flashes
 	}
-	err = templates.ExecuteTemplate(res, "layout."+v.Extension, v.Vars)
+	strs := strings.Split(rootTemplate, "/")
+	layout := strs[len(strs) -1]
+	err = templates.ExecuteTemplate(res, layout+"."+v.Extension, v.Vars)
 	if err != nil {
 		http.Error(res, "Template File Error: "+err.Error(), http.StatusInternalServerError)
 	}
