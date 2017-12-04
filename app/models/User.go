@@ -8,9 +8,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Name string
-	Email string
-	Password string
+	Name string			`schema:"name"`
+	Email string		`schema:"email"`
+	Password string		`schema:"password"`
 }
 
 /**
