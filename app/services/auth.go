@@ -2,9 +2,10 @@ package service
 
 import (
 	"errors"
-	"net/http"
 	"fmt"
+	"net/http"
 	"time"
+
 	model "github.com/goweb3/app/models"
 	"github.com/goweb3/app/shared/flash"
 	"github.com/goweb3/app/shared/passhash"

@@ -2551,6 +2551,7 @@ h2.title {
   display: block;
 }
 
+<<<<<<< HEAD
 html,body,.wrapper{
   background: #f7f7f7;
 }
@@ -2783,6 +2784,36 @@ margin-right: 0;
 .panel-info {
   border-color: #999;
 }
+.fa-stack.cart-stack {
+  line-height: 0px;
+}
+
+.fa-stack[data-count]:after {
+  position: absolute;
+  right: 0%;
+  top: -10%;
+  content: attr(data-count);
+  font-size: 64%;
+  padding: 0.4em;
+  border-radius: 999px;
+  line-height: 0.75em;
+  color: #f3983e;
+  text-align: center;
+  min-width: 1px;
+  font-weight: bold;
+  background: white;
+  border: 1px solid;
+}
+
+.fa-shopping-cart {
+  line-height: 22px;
+}
+
+.fa-circle {
+  color: #df0000;
+}
+
+
 
 .panel-heading {
   border-top-left-radius: 1px;
