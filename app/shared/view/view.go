@@ -57,7 +57,7 @@ func LoadTemplates(rootTemp string, childTemps []string) {
 * Constructor View
 *
 **/
-func New(w http.ResponseWriter, r *http.Request) *View {
+func New(r *http.Request) *View {
 	v := &View{}
 	v.Vars = make(map[string]interface{})
 	v.Vars["AuthLevel"] = "anon"
@@ -70,14 +70,6 @@ func New(w http.ResponseWriter, r *http.Request) *View {
 	// Make sure BaseURI is available in the templates
 	// v.Vars["BaseURI"] = v.BaseURI
 	v.Vars["BaseURI"] = "/"
-
-	// Page url
-	v.Vars["url"] = GetUrl(r)
-
-	// User name
-	sess, _ := session.SessionStart(r, w)
-	userName := sess.Get("name")
-	v.Vars["name"] = userName
 
 	// This is required for the view to access the request
 	v.request = r
@@ -112,6 +104,15 @@ func (v *View) Render(res http.ResponseWriter) {
 		http.Error(res, "Template Parse Error: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Page url
+	v.Vars["url"] = GetUrl(v.request)
+
+	// User name
+	sess, _ := session.SessionStart(v.request, res)
+	userName := sess.Get("name")
+	v.Vars["name"] = userName
+
 	// get flash message
 	fm, err := flash.GetFlash(res, v.request)
 	if err == nil && (flash.Flash{}) != fm {
