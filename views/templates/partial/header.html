@@ -8,11 +8,11 @@
                     <div class="contactinfo">
                         <ul class="nav nav-pills">
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-phone"></i> +2 95 01 88 821</a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-envelope"></i> info@domain.com</a>
                             </li>
                         </ul>
@@ -23,27 +23,27 @@
                     <div class="social-icons pull-right">
                         <ul class="nav navbar-nav">
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-facebook"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-twitter"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-linkedin"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-dribbble"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                                <a href="/">
                                     <i class="fa fa-google-plus"></i>
                                 </a>
                             </li>
@@ -62,7 +62,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="logo pull-left">
-                        <a href="index.html">
+                        <a href="/">
                             <img src="/assets/images/home/logo.png" alt="" />
                         </a>
                     </div>
@@ -74,10 +74,10 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">Canada</a>
+                                    <a href="/">Canada</a>
                                 </li>
                                 <li>
-                                    <a href="#">UK</a>
+                                    <a href="/">UK</a>
                                 </li>
                             </ul>
                         </div>
@@ -89,10 +89,10 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="#">Canadian Dollar</a>
+                                    <a href="/">Canadian Dollar</a>
                                 </li>
                                 <li>
-                                    <a href="#">Pound</a>
+                                    <a href="/">Pound</a>
                                 </li>
                             </ul>
                         </div>
@@ -103,9 +103,10 @@
                         <ul class="nav navbar-nav">
                             <li>
                                 <a href="/cart">
-                                <span class="fa-stack fa-1x cart-stack" data-count="5">
-                                    <i style="" class="fa fa-shopping-cart"></i>
-                                </span>
+                                    <span class="fa-stack fa-1x cart-stack" data-count="{{.count}}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </span>
+                                </a>
                             </li>
                             {{ if .name }}
                             <li>
@@ -149,7 +150,7 @@
                                 <a {{if eq .url "/"}} class="active" {{ end }} href="/">Home</a>
                             </li>
                             <li class="dropdown">
-                                <a {{if eq .url "/sport-wear" "/shoe" "/bag" }} class="active" {{ end }} href="#">Category
+                                <a {{if eq .url "/sport-wear" "/shoe" "/bag" }} class="active" {{ end }} href="/">Category
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul role="menu" class="sub-menu">

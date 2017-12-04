@@ -90,3 +90,16 @@ func ProcessCartProductData(cardID uint, productID uint, quantity uint, cartProd
 		Quantity:  quantity,
 	}
 }
+
+/**
+* Process get count cart products data by cart id
+*
+* return uint
+**/
+func ProcessGetCountCartProduct(userID uint) uint {
+	cart := models.Cart{}
+	_ = cart.FindByUserID(userID)
+	cartProduct := models.CartProduct{}
+	cartProducts := cartProduct.FindByCartID(cart.ID)
+	return uint(len(cartProducts))
+}

@@ -39,3 +39,12 @@ func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID 
 	err = database.SQL.Where("cart_id = ? AND product_id =?", cartID, productID).First(&cartProduct).Error
 	return err
 }
+
+/**
+*
+* Find cart products by cart id
+**/
+func (cartProduct *CartProduct) FindByCartID(cartID uint) (cartProducts []CartProduct) {
+	database.SQL.Where("cart_id = ?", cartID).Find(&cartProducts)
+	return
+}

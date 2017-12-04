@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"sync"
 
+	service "github.com/goweb3/app/services"
 	"github.com/goweb3/app/shared/flash"
 	"github.com/jianfengye/web-golang/web/session"
 )
@@ -113,13 +115,19 @@ func (v *View) Render(w http.ResponseWriter) {
 	userName := sess.Get("name")
 	v.Vars["name"] = userName
 
-	// get flash message
+	// Get flash message
 	fm, err := flash.GetFlash(w, v.request)
 	if err == nil && (flash.Flash{}) != fm {
 		var flashes = make([]flash.Flash, 0)
 		flashes = append(flashes, fm)
 		v.Vars["flashes"] = flashes
 	}
+
+	// Get count cart product
+	userID, _ := strconv.Atoi(sess.Get("id"))
+	count := service.ProcessGetCountCartProduct(uint(userID))
+	v.Vars["count"] = count
+
 	err = templates.ExecuteTemplate(w, "layout."+v.Extension, v.Vars)
 	if err != nil {
 		http.Error(w, "Template File Error: "+err.Error(), http.StatusInternalServerError)
