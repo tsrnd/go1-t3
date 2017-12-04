@@ -6,7 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"sync"
+
+	"strings"
 
 	service "github.com/goweb3/app/services"
 	"github.com/goweb3/app/shared/flash"
@@ -14,13 +15,9 @@ import (
 )
 
 var (
-	viewInfo           View
-	childTemplates     []string
-	rootTemplate       string
-	pluginCollection   = make(template.FuncMap)
-	templateCollection = make(map[string]*template.Template)
-	mutex              sync.RWMutex
-	mutexPlugins       sync.RWMutex
+	viewInfo       View
+	childTemplates []string
+	rootTemplate   string
 )
 
 type Template struct {
@@ -115,7 +112,7 @@ func (v *View) Render(w http.ResponseWriter) {
 	userName := sess.Get("name")
 	v.Vars["name"] = userName
 
-	// Get flash message
+	// get flash message
 	fm, err := flash.GetFlash(w, v.request)
 	if err == nil && (flash.Flash{}) != fm {
 		var flashes = make([]flash.Flash, 0)
@@ -128,7 +125,9 @@ func (v *View) Render(w http.ResponseWriter) {
 	count := service.ProcessGetCountCartProduct(uint(userID))
 	v.Vars["count"] = count
 
-	err = templates.ExecuteTemplate(w, "layout."+v.Extension, v.Vars)
+	strs := strings.Split(rootTemplate, "/")
+	layout := strs[len(strs)-1]
+	err = templates.ExecuteTemplate(w, layout+"."+v.Extension, v.Vars)
 	if err != nil {
 		http.Error(w, "Template File Error: "+err.Error(), http.StatusInternalServerError)
 	}
