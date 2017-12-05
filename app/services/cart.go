@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -102,4 +103,25 @@ func ProcessGetCountCartProduct(userID uint) uint {
 	cartProduct := models.CartProduct{}
 	cartProducts := cartProduct.FindByCartID(cart.ID)
 	return uint(len(cartProducts))
+}
+
+/**
+* Process cart page
+*
+* return products
+**/
+func ProcessCartPage(w http.ResponseWriter, r *http.Request, data map[string]interface{}) (err error) {
+	sess, _ := session.SessionStart(r, w)
+	userID, _ := strconv.Atoi(sess.Get("id"))
+	cart := models.Cart{}
+	err = cart.FindByUserID(uint(userID))
+	if err != nil { // cart not exist
+		data["products"] = err
+	} else { // cart exist
+		cartProduct := models.CartProduct{}
+		cartProducts := cartProduct.GetByCartID(cart.ID)
+		fmt.Println(data["cartPproducts"])
+		data["cartProducts"] = cartProducts
+	}
+	return
 }

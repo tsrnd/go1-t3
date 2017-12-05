@@ -7,7 +7,8 @@ import (
 
 type CartProduct struct {
 	gorm.Model
-	CartID    uint `gorm:"index"`
+	CartID    uint    `gorm:"index"`
+	Product   Product `gorm:"ForeignKey:ProductID"`
 	ProductID uint
 	Quantity  uint
 }
@@ -46,5 +47,14 @@ func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID 
 **/
 func (cartProduct *CartProduct) FindByCartID(cartID uint) (cartProducts []CartProduct) {
 	database.SQL.Where("cart_id = ?", cartID).Find(&cartProducts)
+	return
+}
+
+/**
+*
+* Get all cart products by cart id
+**/
+func (cartProduct *CartProduct) GetByCartID(cartID uint) (cartProducts []CartProduct) {
+	database.SQL.Preload("Product").Where("cart_id = ?", cartID).Find(&cartProducts)
 	return
 }
