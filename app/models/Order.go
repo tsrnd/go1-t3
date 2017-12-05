@@ -6,10 +6,10 @@ import (
 )
 type Order struct {
 	gorm.Model
-	UserID uint
-	NameReceiver string
-	Address string
-	Status uint
+	UserID uint				`schema:"user_id"`
+	NameReceiver string		`schema:"name_receiver"`
+	Address string			`schema:"address"`
+	Status uint				`schema:"status"`
 }
 
 /**

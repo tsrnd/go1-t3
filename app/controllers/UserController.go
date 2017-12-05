@@ -13,7 +13,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 	message, statusCode := make([] string, 0), http.StatusOK
 	err := user.HashPassword()
-	if err == nil {
+	if err != nil {
 		message = append(message, "Password cannot hash!")
 		statusCode = http.StatusFound
 	}

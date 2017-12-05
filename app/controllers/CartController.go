@@ -39,3 +39,9 @@ func AddToCart(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
+
+func DelCartProduct(w http.ResponseWriter, r *http.Request) {
+	productID, _ := strconv.Atoi(mux.Vars(r)["id"])
+	service.ProcessDelCartProduct(w, r, uint(productID))
+	http.Redirect(w, r, "/cart", http.StatusSeeOther)
+}

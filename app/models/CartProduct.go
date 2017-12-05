@@ -7,10 +7,27 @@ import (
 
 type CartProduct struct {
 	gorm.Model
-	CartID    uint    `gorm:"index"`
+	CartID    uint    `schema:"cart_id"`
+	ProductID uint    `schema:"product_id"`
+	Quantity  uint    `schema:"quantity"`
 	Product   Product `gorm:"ForeignKey:ProductID"`
-	ProductID uint
-	Quantity  uint
+}
+
+/**
+*
+* Price follow quantity
+**/
+func (cartProduct *CartProduct) PriceFollowQuantity() uint {
+	return uint(cartProduct.Quantity) * uint(cartProduct.Product.Price)
+}
+
+/**
+*
+* Delete
+**/
+func (cartProduct *CartProduct) Delete() error {
+	err := database.SQL.Delete(&cartProduct).Error
+	return err
 }
 
 /**

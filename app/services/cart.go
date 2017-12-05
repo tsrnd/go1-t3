@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -37,6 +36,7 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) er
 			return err
 		}
 	}
+	flash.SetFlash(w, flash.Flash{"Add success", flash.FlashSuccess})
 	return nil
 }
 
@@ -99,10 +99,14 @@ func ProcessCartProductData(cardID uint, productID uint, quantity uint, cartProd
 **/
 func ProcessGetCountCartProduct(userID uint) uint {
 	cart := models.Cart{}
-	_ = cart.FindByUserID(userID)
+	cart.FindByUserID(userID)
 	cartProduct := models.CartProduct{}
 	cartProducts := cartProduct.FindByCartID(cart.ID)
-	return uint(len(cartProducts))
+	sum := 0
+	for _, v := range cartProducts {
+		sum += int(v.Quantity)
+	}
+	return uint(sum)
 }
 
 /**
@@ -114,14 +118,35 @@ func ProcessCartPage(w http.ResponseWriter, r *http.Request, data map[string]int
 	sess, _ := session.SessionStart(r, w)
 	userID, _ := strconv.Atoi(sess.Get("id"))
 	cart := models.Cart{}
-	err = cart.FindByUserID(uint(userID))
-	if err != nil { // cart not exist
-		data["products"] = err
-	} else { // cart exist
-		cartProduct := models.CartProduct{}
-		cartProducts := cartProduct.GetByCartID(cart.ID)
-		fmt.Println(data["cartPproducts"])
-		data["cartProducts"] = cartProducts
+	cart.FindByUserID(uint(userID))
+	cartProduct := models.CartProduct{}
+	cartProducts := cartProduct.GetByCartID(cart.ID)
+	sum := 0
+	for _, v := range cartProducts {
+		sum += int(v.Quantity) * v.Product.Price
 	}
+	data["cartProducts"] = cartProducts
+	data["priceTotal"] = sum
+	return
+}
+
+/**
+* Process del cart
+*
+* return err
+**/
+func ProcessDelCartProduct(w http.ResponseWriter, r *http.Request, productID uint) (err error) {
+	sess, _ := session.SessionStart(r, w)
+	userID, _ := strconv.Atoi(sess.Get("id"))
+	cart := models.Cart{}
+	cart.FindByUserID(uint(userID))
+	cartProduct := models.CartProduct{}
+	err = cartProduct.FindByCartIDAndProductID(cart.ID, productID)
+	if err != nil {
+		flash.SetFlash(w, flash.Flash{"Cart Product does not exist", flash.FlashError})
+		return err
+	}
+	cartProduct.Delete()
+	flash.SetFlash(w, flash.Flash{"Delete success", flash.FlashSuccess})
 	return
 }
