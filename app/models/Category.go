@@ -5,5 +5,5 @@ import (
 )
 type Category struct {
 	gorm.Model
-	Name string
+	Name string		`schema:"name"`
 }

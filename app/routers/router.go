@@ -15,10 +15,11 @@ func routes() *mux.Router {
 	r.HandleFunc("/news", controler.News).Methods("GET")
 	r.HandleFunc("/contact", controler.Contact).Methods("GET")
 	r.HandleFunc("/shoe", controler.Shoe).Methods("GET")
-	r.HandleFunc("/checkout", controler.Checkout).Methods("GET")
 	r.HandleFunc("/register", middlewares.Chain(controler.Register, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
 	r.HandleFunc("/login", controler.LoginPost).Methods("POST")
 	r.HandleFunc("/logout", controler.Logout).Methods("GET")
+	r.HandleFunc("/checkout", middlewares.Chain(controler.Checkout, middlewares.LoginMiddleware())).Methods("GET")
+	r.HandleFunc("/checkout", middlewares.Chain(controler.CheckoutPost, middlewares.LoginMiddleware())).Methods("POST")
 
 	// Cart
 	r.HandleFunc("/cart", controler.Cart).Methods("GET")

@@ -1,265 +1,141 @@
-{{ define "title" }} Checkout title {{ end }}
+{{ define "title" }} Checkout Page {{ end }}
 {{ define "content" }}
-<section id="cart_items">
-    <div class="container">
-        {{template "breadcrumb.html" .}}
-        <!--/breadcrums-->
 
-        <div class="step-one">
-            <h2 class="heading">Step1</h2>
-        </div>
-        <div class="checkout-options">
-            <h3>New User</h3>
-            <p>Checkout options</p>
-            <ul class="nav">
-                <li>
-                    <label>
-                        <input type="checkbox"> Register Account</label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox"> Guest Checkout</label>
-                </li>
-                <li>
-                    <a href="">
-                        <i class="fa fa-times"></i>Cancel</a>
-                </li>
-            </ul>
-        </div>
-        <!--/checkout-options-->
-
-        <div class="register-req">
-            <p>Please use Register And Checkout to easily get access to your order history, or use Checkout as Guest</p>
-        </div>
-        <!--/register-req-->
-
-        <div class="shopper-informations">
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="shopper-info">
-                        <p>Shopper Information</p>
-                        <form>
-                            <input type="text" placeholder="Display Name">
-                            <input type="text" placeholder="User Name">
-                            <input type="password" placeholder="Password">
-                            <input type="password" placeholder="Confirm password">
-                        </form>
-                        <a class="btn btn-primary" href="">Get Quotes</a>
-                        <a class="btn btn-primary" href="">Continue</a>
+{{template "top-advertisement.html" .}}
+<section id="form-2">
+    <!--form-->
+    <div class="container wrapper">
+            <div class="row cart-head">
+                <div class="container">
+                <div class="row">
+                    <p></p>
+                </div>
+                <div class="row">
+                    <div style="display: table; margin: auto;">
+                        <span class="step step_complete"> <a href="#" class="check-bc">Cart</a> <span class="step_line step_complete"> </span> <span class="step_line backline"> </span> </span>
+                        <span class="step step_complete"> <a href="#" class="check-bc">Checkout</a> <span class="step_line "> </span> <span class="step_line step_complete"> </span> </span>
+                        <span class="step_thankyou check-bc step_complete">Thank you</span>
                     </div>
                 </div>
-                <div class="col-sm-5 clearfix">
-                    <div class="bill-to">
-                        <p>Bill To</p>
-                        <div class="form-one">
-                            <form>
-                                <input type="text" placeholder="Company Name">
-                                <input type="text" placeholder="Email*">
-                                <input type="text" placeholder="Title">
-                                <input type="text" placeholder="First Name *">
-                                <input type="text" placeholder="Middle Name">
-                                <input type="text" placeholder="Last Name *">
-                                <input type="text" placeholder="Address 1 *">
-                                <input type="text" placeholder="Address 2">
-                            </form>
+                <div class="row">
+                    <p></p>
+                </div>
+                </div>
+            </div>    
+            <div class="row cart-body">   
+                <form class="form-horizontal" method="post" action="/checkout">
+                    {{.csrfField}}
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-push-6 col-sm-push-6">
+                        <!--REVIEW ORDER-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Review Order <div class="pull-right"><small><a class="afix-1" href="#">Edit Cart</a></small></div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="form-group"><hr /></div>
+                                {{ range .cart.CartProducts}}
+                                <div class="form-group">
+                                    <div class="col-sm-3 col-xs-3">
+                                        <img class="img-responsive" src="//c1.staticflickr.com/1/466/19681864394_c332ae87df_t.jpg" />
+                                    </div>
+                                    <div class="col-sm-6 col-xs-6">
+                                        <div class="col-xs-12">{{.Product.Name}}</div>
+                                        <div class="col-xs-12"><small>Quantity:<span>{{.Quantity}}</span></small></div>
+                                    </div>
+                                    <div class="col-sm-3 col-xs-3 text-right">
+                                        <h6>{{.PriceFollowQuantity}}<span>vnd</span></h6>
+                                    </div>
+                                </div>
+                                {{end}}
+                                
+                                <div class="form-group"><hr /></div>
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <strong>Subtotal</strong>
+                                        <div class="pull-right"><span>20000</span><span>vnd</span></div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <small>Shipping</small>
+                                        <div class="pull-right"><span>-</span></div>
+                                    </div>
+                                </div>
+                                <div class="form-group"><hr /></div>
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <strong>Order Total</strong>
+                                        <div class="pull-right"><span>{{.totalPrice}}</span><span>vnd</span></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-two">
-                            <form>
-                                <input type="text" placeholder="Zip / Postal Code *">
-                                <select>
-                                    <option>-- Country --</option>
-                                    <option>United States</option>
-                                    <option>Bangladesh</option>
-                                    <option>UK</option>
-                                    <option>India</option>
-                                    <option>Pakistan</option>
-                                    <option>Ucrane</option>
-                                    <option>Canada</option>
-                                    <option>Dubai</option>
-                                </select>
-                                <select>
-                                    <option>-- State / Province / Region --</option>
-                                    <option>United States</option>
-                                    <option>Bangladesh</option>
-                                    <option>UK</option>
-                                    <option>India</option>
-                                    <option>Pakistan</option>
-                                    <option>Ucrane</option>
-                                    <option>Canada</option>
-                                    <option>Dubai</option>
-                                </select>
-                                <input type="password" placeholder="Confirm password">
-                                <input type="text" placeholder="Phone *">
-                                <input type="text" placeholder="Mobile Phone">
-                                <input type="text" placeholder="Fax">
-                            </form>
+                        <!--REVIEW ORDER END-->
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 col-md-pull-6 col-sm-pull-6">
+                        <!--SHIPPING METHOD-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Address</div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <h4>Shipping Address<span style="color: red">(*)</span></h4>
+                                    </div>
+                                </div>
+                    
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <strong>Name Receiver<span style="color: red">(*)</span>:</strong>
+                                        <input type="text" name="name-receiver" class="form-control" value="" required/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Address<span style="color: red">(*)</span>:</strong></div>
+                                    <div class="col-md-12">
+                                        <input type="text" name="address" class="form-control" value="" required/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <!--SHIPPING METHOD END-->
+                        <!--CREDIT CART PAYMENT-->
+                        <div class="panel panel-info">
+                            <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Online Payment<span style="color: rgb(236, 233, 232)"> (Pay by Creditcard)</span></div>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Card Bank<span style="color: red">(*)</span>:</strong></div>
+                                    <div class="col-md-12"><input type="text" class="form-control" name="bank" value="" required/></div>                                    
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12"><strong>Credit Card Number<span style="color: red">(*)</span>:</strong></div>
+                                    <div class="col-md-12"><input type="text" class="form-control" name="car_number" value="" required/></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <span>Pay secure using your credit card.</span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <ul class="cards">
+                                            <li class="visa hand">Visa</li>
+                                            <li class="mastercard hand">MasterCard</li>
+                                            <li class="amex hand">Amex</li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12 text_center">
+                                        <button type="submit" class="btn btn-primary btn-submit-fix">Place Order</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--CREDIT CART PAYMENT END-->
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="order-message">
-                        <p>Shipping Order</p>
-                        <textarea name="message" placeholder="Notes about your order, Special Notes for Delivery" rows="16"></textarea>
-                        <label>
-                            <input type="checkbox"> Shipping to bill address</label>
-                    </div>
-                </div>
+                
+                </form>
             </div>
         </div>
-        <div class="review-payment">
-            <h2>Review & Payment</h2>
-        </div>
-
-        <div class="table-responsive cart_info">
-            <table class="table table-condensed">
-                <thead>
-                    <tr class="cart_menu">
-                        <td class="image">Item</td>
-                        <td class="description"></td>
-                        <td class="price">Price</td>
-                        <td class="quantity">Quantity</td>
-                        <td class="total">Total</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="cart_product">
-                            <a href="">
-                                <img src="/assets/images/cart/one.png" alt="">
-                            </a>
-                        </td>
-                        <td class="cart_description">
-                            <h4>
-                                <a href="">Colorblock Scuba</a>
-                            </h4>
-                            <p>Web ID: 1089772</p>
-                        </td>
-                        <td class="cart_price">
-                            <p>$59</p>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
-                            </div>
-                        </td>
-                        <td class="cart_total">
-                            <p class="cart_total_price">$59</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href="">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td class="cart_product">
-                            <a href="">
-                                <img src="/assets/images/cart/two.png" alt="">
-                            </a>
-                        </td>
-                        <td class="cart_description">
-                            <h4>
-                                <a href="">Colorblock Scuba</a>
-                            </h4>
-                            <p>Web ID: 1089772</p>
-                        </td>
-                        <td class="cart_price">
-                            <p>$59</p>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
-                            </div>
-                        </td>
-                        <td class="cart_total">
-                            <p class="cart_total_price">$59</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href="">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="cart_product">
-                            <a href="">
-                                <img src="/assets/images/cart/three.png" alt="">
-                            </a>
-                        </td>
-                        <td class="cart_description">
-                            <h4>
-                                <a href="">Colorblock Scuba</a>
-                            </h4>
-                            <p>Web ID: 1089772</p>
-                        </td>
-                        <td class="cart_price">
-                            <p>$59</p>
-                        </td>
-                        <td class="cart_quantity">
-                            <div class="cart_quantity_button">
-                                <a class="cart_quantity_up" href=""> + </a>
-                                <input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-                                <a class="cart_quantity_down" href=""> - </a>
-                            </div>
-                        </td>
-                        <td class="cart_total">
-                            <p class="cart_total_price">$59</p>
-                        </td>
-                        <td class="cart_delete">
-                            <a class="cart_quantity_delete" href="">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">&nbsp;</td>
-                        <td colspan="2">
-                            <table class="table table-condensed total-result">
-                                <tr>
-                                    <td>Cart Sub Total</td>
-                                    <td>$59</td>
-                                </tr>
-                                <tr>
-                                    <td>Exo Tax</td>
-                                    <td>$2</td>
-                                </tr>
-                                <tr class="shipping-cost">
-                                    <td>Shipping Cost</td>
-                                    <td>Free</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td>
-                                        <span>$61</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="payment-options">
-            <span>
-                <label>
-                    <input type="checkbox"> Direct Bank Transfer</label>
-            </span>
-            <span>
-                <label>
-                    <input type="checkbox"> Check Payment</label>
-            </span>
-            <span>
-                <label>
-                    <input type="checkbox"> Paypal</label>
-            </span>
-        </div>
-    </div>
 </section>
-<!--/#cart_items-->
-{{end}}
+<!--/form-->
+{{ end }}
+

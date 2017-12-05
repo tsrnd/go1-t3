@@ -6,6 +6,6 @@ import (
 
 type ProductCategory struct {
 	gorm.Model
-	ProductID uint
-	CategoryID uint
+	ProductID uint		`schema:"product_id"`
+	CategoryID uint		`schema:"category_id"`
 }

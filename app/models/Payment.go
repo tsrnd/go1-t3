@@ -6,10 +6,9 @@ import (
 )
 type Payment struct {
 	gorm.Model
-	OrderID uint
-	PaymentMetnod string
-	AccountNumber string
-	Bank string
+	OrderID uint			`schema:"order_id"`
+	AccountNumber string	`schema:"account_number"`
+	Bank string				`schema:"bank"`
 }
 
 /**
