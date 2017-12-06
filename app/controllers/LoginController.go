@@ -1,32 +1,40 @@
 package controller
 
-import "net/http"
-import "github.com/gorilla/csrf"
-import "github.com/goweb3/app/shared/view"
-import service "github.com/goweb3/app/services"
-import "github.com/goweb3/app/shared/cookie"
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/gorilla/csrf"
+	"github.com/goweb3/app/shared/cookie"
+	"github.com/goweb3/app/shared/view"
+
+	service "github.com/goweb3/app/services"
+)
 
 /**
 *
 * Get view Login
 **/
-func Login(w http.ResponseWriter, r *http.Request) {
+func (l *LoginController) Index(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
 	v.Vars[csrf.TemplateTag] = csrf.TemplateField(r)
 	message := cookie.GetMessageStartWith(w, r, "Register")
-	for key, val :=range cookie.GetMessageStartWith(w, r, "Login") {
+	for key, val := range cookie.GetMessageStartWith(w, r, "Login") {
 		message[key] = val
 	}
 	v.Vars["message"] = message
 	v.Name = "auth/login"
-	v.Render(w)
+	l.Render(w, v)
 }
 
 /**
 *
 * Post Login
 **/
-func LoginPost(w http.ResponseWriter, r *http.Request) {
+func (l *LoginController) Login(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	email := r.FormValue("email")
+	fmt.Println(email)
 	err := service.Auth(w, r)
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -43,3 +51,5 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	service.Logout(w, r)
 	http.Redirect(w, r, "/", http.StatusFound)
 }
+
+var GetLoginController = &LoginController{Render: renderView}
