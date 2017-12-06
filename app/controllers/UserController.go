@@ -7,11 +7,11 @@ import "strings"
 func Register(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	user := models.User{
-		Name: strings.Trim(r.Form["name"][0], " "),
-		Email: strings.Trim(r.Form["email"][0], " "),
-		Password: strings.Trim(r.Form["password"][0], " "),
+		Name: strings.Trim(r.FormValue("name"), " "),
+		Email: strings.Trim(r.FormValue("email"), " "),
+		Password: strings.Trim(r.FormValue("password"), " "),
 	}
-	message, statusCode := make([] string, 0), http.StatusOK
+	message, statusCode := make([] string, 0), http.StatusSeeOther
 	err := user.HashPassword()
 	if err != nil {
 		message = append(message, "Password cannot hash!")

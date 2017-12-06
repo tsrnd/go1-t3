@@ -37,7 +37,8 @@ func CheckoutPost(w http.ResponseWriter, r *http.Request) {
 	userId,_ := strconv.ParseInt(sess.Get("id"), 10, 32)
 	order := models.Order{
 		UserID: uint(userId),
-		Address: strings.Trim(r.Form["address"][0], " "),
+		NameReceiver : strings.Trim(r.FormValue("name-receiver"), " "),
+		Address: strings.Trim(r.FormValue("address"), " "),
 		Status: 1,
 	}
 	message := make([] string, 0)
@@ -81,8 +82,8 @@ func CheckoutPost(w http.ResponseWriter, r *http.Request) {
 	/* Create payment */
 	payment := models.Payment{
 		OrderID : order.ID,
-		AccountNumber : strings.Trim(r.Form["car_number"][0], " "),
-		Bank : strings.Trim(r.Form["bank"][0], " "),
+		AccountNumber : strings.Trim(r.FormValue("car_number"), " "),
+		Bank : strings.Trim(r.FormValue("bank"), " "),
 	}
 	if err := db.Create(&payment).Error; err != nil {
 		db.Rollback()
