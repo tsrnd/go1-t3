@@ -7,26 +7,25 @@ import (
 
 type CartProduct struct {
 	gorm.Model
-	CartID uint 		`schema:"cart_id"`
-	ProductID uint		`schema:"product_id"`
-	Quantity uint 		`schema:"quantity"`
-	Product Product
+	CartID    uint    `schema:"cart_id"`
+	ProductID uint    `schema:"product_id"`
+	Quantity  uint    `schema:"quantity"`
+	Product   Product `gorm:"ForeignKey:ProductID"`
 }
 
 /**
 *
 * Price follow quantity
 **/
-func (cartProduct *CartProduct) PriceFollowQuantity() (int) {
-	return int(cartProduct.Quantity) * cartProduct.Product.Price
+func (cartProduct *CartProduct) PriceFollowQuantity() uint {
+	return uint(cartProduct.Quantity) * uint(cartProduct.Product.Price)
 }
-
 
 /**
 *
 * Delete
 **/
-func (cartProduct *CartProduct) Delete() (error) {
+func (cartProduct *CartProduct) Delete() error {
 	err := database.SQL.Delete(&cartProduct).Error
 	return err
 }
@@ -65,5 +64,14 @@ func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID 
 **/
 func (cartProduct *CartProduct) FindByCartID(cartID uint) (cartProducts []CartProduct) {
 	database.SQL.Where("cart_id = ?", cartID).Find(&cartProducts)
+	return
+}
+
+/**
+*
+* Get all cart products by cart id
+**/
+func (cartProduct *CartProduct) GetByCartID(cartID uint) (cartProducts []CartProduct) {
+	database.SQL.Preload("Product").Where("cart_id = ?", cartID).Find(&cartProducts)
 	return
 }
