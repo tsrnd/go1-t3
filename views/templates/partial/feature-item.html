@@ -7,18 +7,18 @@
                 <div class="single-products">
                     <div class="productinfo text-center">
                         {{ range .ProductImages }}
-                        <img src="/assets/images/home/{{.Image}}" alt="" />
+                        <img src="/static/images/home/{{.Image}}" alt="" />
                         {{ end }}
                         <h2>${{.Price}}</h2>
                         <p>{{.Name}}</p>
-                        <a href="/cart/{{.ID}}" class="btn btn-default add-to-cart">
+                        <a href="/cart/{{.Id}}" class="btn btn-default add-to-cart">
                             <i class="fa fa-shopping-cart"></i>Add to cart</a>
                     </div>
                     <div class="product-overlay">
                         <div class="overlay-content">
                             <h2>${{.Price}}</h2>
                             <p>{{.Name}}</p>
-                            <a href="/cart/{{.ID}}" class="btn btn-default add-to-cart">
+                            <a href="/cart/{{.Id}}" class="btn btn-default add-to-cart">
                                 <i class="fa fa-shopping-cart"></i>Add to cart</a>
                         </div>
                     </div>

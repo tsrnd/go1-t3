@@ -4,7 +4,7 @@ r.HandleFunc("/register", middleware.Chain(controler.Login, middleware.ValidateR
 {{ define "title" }} Login page title {{ end }}
 {{ define "content" }}
 
-{{template "top-advertisement.html" .}}
+{{template "templates/partial/top-advertisement.html" .}}
 <section id="form-2">
     <!--form-->
     <div class="container">
