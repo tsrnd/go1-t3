@@ -1,14 +1,13 @@
 package middleware
 
 import (
-	"github.com/goweb3/app/models"
 	"strings"
 	"net/http"
 	"github.com/goweb3/app/validations"
 	"github.com/goweb3/app/shared/cookie"
 )
-// ValidateRegisterFormMiddleware check validate register form
-func ValidateRegisterFormMiddleware() Middleware {
+// ValidateLoginFormMiddleware check validate login form
+func ValidateLoginFormMiddleware() Middleware {
 	
 		// Create a new Middleware
 		return func(f http.HandlerFunc) http.HandlerFunc {
@@ -18,24 +17,17 @@ func ValidateRegisterFormMiddleware() Middleware {
 				// Do middleware things
 				r.ParseForm()
 				email := strings.Trim(r.FormValue("email"), " ")
-				name := strings.Trim(r.FormValue("name"), " ")
 				password := strings.Trim(r.FormValue("password"), " ")
-				registerRequest := validations.RegisterRequest {
-					Username : name,
+				loginRequest := validations.LoginRequest {
 					Email : email,
 					Password : password,
 				}
-				err := registerRequest.ValidateStruct()
+				err := loginRequest.ValidateStruct()
 				message := make(map[string] string)
 				if (err != nil) {	
 					message = validations.CustomErrorMessage(err)
-					user := models.User{}
-					err := user.FindByEmail(email)
-					if  err == nil {
-						message["EmailEXIST"] = "Email already exists"
-					}
 					for key, val := range message {
-						cookie.SetMessage(w, val, "Register"+key)
+						cookie.SetMessage(w, val, "Login" + key)
 					}
 					http.Redirect(w, r, "/login", http.StatusFound)
 					return					

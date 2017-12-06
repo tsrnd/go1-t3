@@ -3,6 +3,7 @@ package controller
 import "net/http"
 import "github.com/goweb3/app/models"
 import "strings"
+import 	"github.com/goweb3/app/shared/flash"
 
 func Register(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -11,16 +12,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		Email: strings.Trim(r.FormValue("email"), " "),
 		Password: strings.Trim(r.FormValue("password"), " "),
 	}
-	message, statusCode := make([] string, 0), http.StatusSeeOther
 	err := user.HashPassword()
-	if err != nil {
-		message = append(message, "Password cannot hash!")
-		statusCode = http.StatusFound
+	if err == nil {
+		flash.SetFlash(w, flash.Flash{"Password cannot hash!", flash.FlashError})
 	}
 	err = user.Create()
 	if err != nil {
-		message = append(message, "User cannot create. Please try again!")
-		statusCode = http.StatusFound		
+		flash.SetFlash(w, flash.Flash{"User cannot create. Please try again!", flash.FlashError})		
 	}
-	http.Redirect(w, r, "/login", statusCode)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
