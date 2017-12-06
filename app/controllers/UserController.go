@@ -5,7 +5,10 @@ import "github.com/goweb3/app/models"
 import "strings"
 import 	"github.com/goweb3/app/shared/flash"
 
-func Register(w http.ResponseWriter, r *http.Request) {
+	"github.com/goweb3/app/models"
+)
+
+func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	user := models.User{
 		Name: strings.Trim(r.FormValue("name"), " "),
@@ -18,7 +21,10 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 	err = user.Create()
 	if err != nil {
+
 		flash.SetFlash(w, flash.Flash{"User cannot create. Please try again!", flash.FlashError})		
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
+
+var GetUserController = &UserController{Render: renderView}
