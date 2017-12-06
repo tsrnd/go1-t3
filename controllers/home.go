@@ -11,6 +11,7 @@ type HomeController struct {
 }
 
 func (c *HomeController) Get() {
+	c.StartSession
 	service.ProcessHompage(c.Data)
 	c.Data["url"] = ""
 	c.TplName = "home/index.html"
