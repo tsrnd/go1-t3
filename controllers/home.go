@@ -12,9 +12,6 @@ type HomeController struct {
 
 func (c *HomeController) Get() {
 	service.ProcessHompage(c.Data)
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	// Page url
-	c.Data["url"] = "/"
+	c.Data["url"] = ""
 	c.TplName = "home/index.html"
 }
