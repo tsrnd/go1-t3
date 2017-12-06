@@ -15,9 +15,9 @@
 				"Parameter": "?parseTime=true"
 			},
 			"Postgres": {
-				"Username": "default",
-				"Password": "secret",
-				"Name": "default",
+				"Username": "postgres",
+				"Password": "1234",
+				"Name": "eshop",
 				"Hostname": "127.0.0.1",
 				"Port": 5432
 			}
