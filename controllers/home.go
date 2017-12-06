@@ -3,7 +3,6 @@ package controllers
 import (
 	"github.com/astaxie/beego"
 	service "github.com/goweb3/services"
-	
 )
 
 type HomeController struct {
