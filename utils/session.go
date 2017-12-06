@@ -1,14 +1,17 @@
 package utils
 
 import (
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/session"
-	"github.com/astaxie/beego"	
 )
 
-type Session struct {
-	SessionStore session.Store
+type SessionUtil struct {
+	SessionStore *session.Store
 }
-
-func (s *Session) GetSession(controller *session.Store) {
-	s.SessionStore = controller.StartSession()
+var (
+	Session session.Store
+)
+func (s *SessionUtil) GetSession(controller beego.Controller) {
+	sess := controller.StartSession()
+	Session = sess
 }

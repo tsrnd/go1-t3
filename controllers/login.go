@@ -10,17 +10,21 @@ type LoginController struct {
 }
 var (
 	auth services.AuthService
-	session utils.Session
+	session utils.SessionUtil
 )
 
-func (c *LoginController) Get() {
+func (c *LoginController) Index() {
 	c.Data["url"] = ""
 	c.TplName = "auth/login.html"
 }
 
-func (this *LoginController) Post() {
-	session.GetSession(this)
+func (this *LoginController) Login() {
+	session.GetSession(this.Controller)
 	email := this.GetString("email")
 	password := this.GetString("password")
-	auth.Login(email, password)
+	err := auth.Login(email, password)
+	if err != nil {
+		this.Ctx.Redirect(302, "/login")
+	}
+	this.Ctx.Redirect(302, "/")
 }

@@ -10,8 +10,7 @@ type HomeController struct {
 	beego.Controller
 }
 
-func (c *HomeController) Get() {
-	c.StartSession
+func (c *HomeController) Index() {
 	service.ProcessHompage(c.Data)
 	c.Data["url"] = ""
 	c.TplName = "home/index.html"
