@@ -4,6 +4,7 @@ import "net/http"
 import "github.com/gorilla/csrf"
 import "github.com/goweb3/app/shared/view"
 import service "github.com/goweb3/app/services"
+import "github.com/goweb3/app/shared/cookie"
 
 /**
 *
@@ -12,6 +13,11 @@ import service "github.com/goweb3/app/services"
 func Login(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
 	v.Vars[csrf.TemplateTag] = csrf.TemplateField(r)
+	message := cookie.GetMessageStartWith(w, r, "Register")
+	for key, val :=range cookie.GetMessageStartWith(w, r, "Login") {
+		message[key] = val
+	}
+	v.Vars["message"] = message
 	v.Name = "auth/login"
 	v.Render(w)
 }

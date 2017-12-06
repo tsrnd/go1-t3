@@ -8,6 +8,7 @@ import "github.com/gorilla/csrf"
 import "github.com/goweb3/app/models"
 import "github.com/jianfengye/web-golang/web/session"
 import "github.com/goweb3/app/shared/database"
+import "github.com/goweb3/app/shared/cookie"
 
 func Checkout(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session.SessionStart(r, w)
@@ -24,6 +25,13 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	}
 	v := view.New(r)
 	v.Vars[csrf.TemplateTag] = csrf.TemplateField(r)
+	if content := cookie.GetMessage(w, r, "ErrorCheckout"); content != "" {
+		v.Vars["titleMessage"] = "Error"
+		v.Vars["contentMessage"] = content
+	} else if content := cookie.GetMessage(w, r, "SuccessCheckout"); content != "" {
+		v.Vars["titleMessage"] = "Success"
+		v.Vars["contentMessage"] = content
+	}
 	v.Vars["cart"] = cart
 	v.Vars["totalPrice"] = cart.TotalPrice()
 	v.Name = "checkout/index"
@@ -39,13 +47,13 @@ func CheckoutPost(w http.ResponseWriter, r *http.Request) {
 		Address: strings.Trim(r.Form["address"][0], " "),
 		Status:  1,
 	}
-	message := make([]string, 0)
+	message := "Order failed! !"
 	/* Begin transaction */
 	db := database.SQL.Begin()
 	/* Create order */
 	if err := db.Create(&order).Error; err != nil {
 		db.Rollback()
-		message = append(message, "Can not create order!")
+		cookie.SetMessage(w, message, "ErrorCheckout")
 		http.Redirect(w, r, "/checkout", http.StatusFound)
 	}
 	cart := models.Cart{}
@@ -60,21 +68,21 @@ func CheckoutPost(w http.ResponseWriter, r *http.Request) {
 		}
 		/* Create orderProduct */
 		if err := db.Create(&orderProduct).Error; err != nil {
+			cookie.SetMessage(w, message, "ErrorCheckout")
 			db.Rollback()
-			message = append(message, "Can not create order product!")
 			http.Redirect(w, r, "/checkout", http.StatusFound)
 		}
 		/* Delete cartProduct */
 		if err := db.Delete(&cart.CartProducts[i]).Error; err != nil {
+			cookie.SetMessage(w, message, "ErrorCheckout")
 			db.Rollback()
-			message = append(message, "Can not delete cart product!")
 			http.Redirect(w, r, "/checkout", http.StatusFound)
 		}
 	}
 	/* Create cart */
 	if err := db.Delete(&cart).Error; err != nil {
+		cookie.SetMessage(w, message, "ErrorCheckout")
 		db.Rollback()
-		message = append(message, "Can not delete cart!")
 		http.Redirect(w, r, "/checkout", http.StatusFound)
 	}
 	/* Create payment */
@@ -84,10 +92,12 @@ func CheckoutPost(w http.ResponseWriter, r *http.Request) {
 		Bank:          strings.Trim(r.Form["bank"][0], " "),
 	}
 	if err := db.Create(&payment).Error; err != nil {
+		cookie.SetMessage(w, message, "ErrorCheckout")
 		db.Rollback()
-		message = append(message, "Can not create payment!")
 		http.Redirect(w, r, "/checkout", http.StatusFound)
 	}
+	message = "Order successful! Thank you!"
+	cookie.SetMessage(w, message, "SuccessCheckout")
 	db.Commit()
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/checkout", http.StatusSeeOther)
 }
