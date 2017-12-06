@@ -4,6 +4,13 @@
 {{template "top-advertisement.html" .}}
 <section id="form-2">
     <!--form-->
+    {{if .titleMessage}}
+        <b id="message-checkout"
+        data-title={{.titleMessage}}
+        data-body={{.contentMessage}}>
+        ></b>
+    {{end}}
+    {{template "modal.html"}}
     <div class="container wrapper">
             <div class="row cart-head">
                 <div class="container">
@@ -124,7 +131,11 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-12 text_center">
+                                        {{if .cart.CartProducts}}
                                         <button type="submit" class="btn btn-primary btn-submit-fix">Place Order</button>
+                                        {{else}}
+                                        <button type="submit" class="btn btn-primary btn-submit-fix" disabled>Place Order</button>
+                                        {{end}}
                                     </div>
                                 </div>
                             </div>

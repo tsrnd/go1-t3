@@ -16,7 +16,7 @@ func GetMessage(w http.ResponseWriter, r *http.Request, name string) (message st
 	c, err := r.Cookie(name)
 	if err != nil {
 		if err == http.ErrNoCookie {
-			fmt.Println(w, "No message found")
+			fmt.Println("Not found message")
 		}
 	} else {
 		rc := http.Cookie{
