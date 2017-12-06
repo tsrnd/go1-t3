@@ -40,9 +40,8 @@
 		"Port": 8080
 	},
 	"Template": {
-		"Root": "home/index",
+		"Root": "templates/layout",
 		"Children": [
-			"templates/layout",
 			"templates/partial/footer",
 			"templates/partial/header",
 			"templates/partial/slider",

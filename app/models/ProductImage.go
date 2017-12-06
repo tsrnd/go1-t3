@@ -6,7 +6,7 @@ import (
 
 type ProductImage struct {
 	gorm.Model
-	ProductID uint `gorm:"index"`
-	Image string
+	ProductID uint    `schema:"product_id"`
+	Image     string  `schema:"image"`
+	Product   Product `gorm:"ForeignKey:ProductID"`
 }
-
