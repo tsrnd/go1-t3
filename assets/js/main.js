@@ -33,3 +33,13 @@ $(document).ready(function(){
 		});
 	});
 });
+
+$("#message-checkout").ready(function() {
+	if(document.getElementById("message-checkout") != null){
+		var title = $("#message-checkout").data('title');
+		var body = '<i>' + $("#message-checkout").data('body') + '</i>';
+		$('#title-content').html(title);
+		$('#text-message').html(body);
+		$('#checkout-modal').modal('show');
+	}
+});
