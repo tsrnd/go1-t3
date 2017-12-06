@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -16,6 +17,10 @@ import (
 **/
 func Cart(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
+	err := service.ProcessCartPage(w, r, v.Vars)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	v.Name = "cart/index"
 	v.Render(w)
 }
@@ -33,4 +38,10 @@ func AddToCart(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
+}
+
+func DelCartProduct(w http.ResponseWriter, r *http.Request) {
+	productID, _ := strconv.Atoi(mux.Vars(r)["id"])
+	service.ProcessDelCartProduct(w, r, uint(productID))
+	http.Redirect(w, r, "/cart", http.StatusSeeOther)
 }

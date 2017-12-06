@@ -6,18 +6,9 @@ import (
 )
 
 type Cart struct {
-	gorm.Model	
+	gorm.Model
 	CartProducts []CartProduct
-	UserID uint `schema:"user_id"`
-}
-
-/**
-*
-* Find cart by user_id
-**/
-func (cart *Cart) FindByUserId(userId int) (err error) {
-	err = database.SQL.Where("user_id = ?", userId).First(&cart).Error
-	return err
+	UserID       uint `schema:"user_id"`
 }
 
 /**
@@ -33,19 +24,19 @@ func (cart *Cart) Create() (err error) {
 *
 * Total price cart
 **/
-func (cart *Cart) TotalPrice() (int) {
+func (cart *Cart) TotalPrice() uint {
 	sum := 0
 	for _, v := range cart.CartProducts {
 		sum += int(v.Quantity) * v.Product.Price
 	}
-	return sum + 20000
+	return uint(sum + 20000)
 }
 
 /**
 *
 * Delete
 **/
-func (cart *Cart) Delete() (error) {
+func (cart *Cart) Delete() error {
 	err := database.SQL.Delete(&cart).Error
 	return err
 }

@@ -24,6 +24,7 @@ func routes() *mux.Router {
 	// Cart
 	r.HandleFunc("/cart", controler.Cart).Methods("GET")
 	r.HandleFunc("/cart/{id:[0-9]+}", controler.AddToCart).Methods("GET")
+	r.HandleFunc("/cart/del/{id:[0-9]+}", controler.DelCartProduct).Methods("GET")
 	return r
 }
 
