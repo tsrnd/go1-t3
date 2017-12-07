@@ -28,4 +28,3 @@ func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 var GetUserController = &UserController{Render: renderView}
-
