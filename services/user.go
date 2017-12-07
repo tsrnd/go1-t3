@@ -3,7 +3,6 @@ package services
 import (
 	"github.com/astaxie/beego/orm"
 	model "github.com/goweb3/models"
-
 )
 type UserService struct{
 
