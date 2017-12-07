@@ -16,8 +16,8 @@ func ValidateLoginFormMiddleware() Middleware {
 			return func(w http.ResponseWriter, r *http.Request) {
 				// Do middleware things
 				r.ParseForm()
-				email := strings.Trim(r.Form["email"][0], " ")
-				password := strings.Trim(r.Form["password"][0], " ")
+				email := strings.Trim(r.FormValue("email"), " ")
+				password := strings.Trim(r.FormValue("password"), " ")
 				loginRequest := validations.LoginRequest {
 					Email : email,
 					Password : password,
