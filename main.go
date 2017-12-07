@@ -1,10 +1,11 @@
 package main
 
 import (
-	_ "github.com/goweb3/routers"
+	"fmt"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"fmt"
+	_ "github.com/goweb3/routers"
 )
 
 func init() {
@@ -15,7 +16,7 @@ func init() {
 	pass := beego.AppConfig.String("postgres_pass")
 	dbname := beego.AppConfig.String("postgres_dbname")
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, username, pass, dbname)
-	orm.RegisterDataBase("default", "postgres", psqlInfo);
+	orm.RegisterDataBase("default", "postgres", psqlInfo)
 }
 
 func main() {
