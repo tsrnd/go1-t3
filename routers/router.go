@@ -32,7 +32,13 @@ var routers = Routers{
 }
 
 func init() {
+<<<<<<< HEAD
 	for _, router := range routers {
 		beego.Router(router.Url, router.Controller, router.MethodMapping...)
 	}
 }
+=======
+	beego.Router("/", &controllers.HomeController{})
+	beego.Router("/guest/register", &controllers.UserController{}, "post:Register")
+}
+>>>>>>> 222b04d51827c0f13d0f60cb79795a8f0110f1f5

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 {{ template "templates/layout.html" .}}
+=======
+{{template "templates/layout.html" .}}
+>>>>>>> 222b04d51827c0f13d0f60cb79795a8f0110f1f5
 {{ define "title" }} Login page title {{ end }}
 {{ define "content" }}
 
@@ -37,7 +41,7 @@
                 <div class="signup-form">
                     <!--sign up form-->
                     <h2>New User Signup!</h2>
-                    <form action="/register" method="post">
+                    <form action="/guest/register" method="post">
                         <input type="text" name="name" placeholder="Name" required/>
                         <span><small style="color: red">
                             {{.message.RegisterUsernameREQUIRED}}
