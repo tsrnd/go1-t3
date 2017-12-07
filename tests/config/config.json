@@ -1,0 +1,64 @@
+{
+	"Database": {
+		"Driver": "Postgres",
+		"Connections": {
+			"MongoDB": {
+				"URL": "127.0.0.1",
+				"Database": "gowebapp"
+			},
+			"MySQL": {
+				"Username": "root",
+				"Password": "",
+				"Name": "gowebapp",
+				"Hostname": "127.0.0.1",
+				"Port": 3306,
+				"Parameter": "?parseTime=true"
+			},
+			"Postgres": {
+				"Username": "postgres",
+				"Password": "1234",
+				"Name": "eshop",
+				"Hostname": "127.0.0.1",
+				"Port": 5432
+			}
+		}
+	},
+	"Email": {
+		"Username": "",
+		"Password": "",
+		"Hostname": "",
+		"Port": 25,
+		"From": ""
+	},
+	"Recaptcha": {
+		"Enabled": false,
+		"Secret": "",
+		"SiteKey": ""
+	},
+	"Server": {
+		"Hostname": "localhost",
+		"Port": 8080
+	},
+	"Template": {
+		"Root": "templates/layout",
+		"Children": [
+			"templates/partial/footer",
+			"templates/partial/header",
+			"templates/partial/slider",
+			"templates/partial/left-sidebar",
+			"templates/partial/category-tab",
+			"templates/partial/recommend-item",
+			"templates/partial/feature-item",
+			"templates/partial/top-advertisement",
+			"templates/partial/breadcrumb",
+			"templates/partial/product-detail"
+		]
+	},
+	"View": {
+		"BaseURI": "/",
+		"Extension": "html",
+		"Folder": "views",
+		"Name": "blank",
+		"Caching": true
+	}
+}

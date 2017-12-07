@@ -1,18 +1,18 @@
 package controller
 
-import (
-	"net/http"
-	"strings"
+import "net/http"
+import "github.com/goweb3/app/models"
+import "strings"
+import 	"github.com/goweb3/app/shared/flash"
 
 	"github.com/goweb3/app/models"
-	"github.com/goweb3/app/shared/flash"
 )
 
 func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	user := models.User{
-		Name:     strings.Trim(r.FormValue("name"), " "),
-		Email:    strings.Trim(r.FormValue("email"), " "),
+		Name: strings.Trim(r.FormValue("name"), " "),
+		Email: strings.Trim(r.FormValue("email"), " "),
 		Password: strings.Trim(r.FormValue("password"), " "),
 	}
 	err := user.HashPassword()
@@ -21,9 +21,11 @@ func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	err = user.Create()
 	if err != nil {
-		flash.SetFlash(w, flash.Flash{"User cannot create. Please try again!", flash.FlashError})
+
+		flash.SetFlash(w, flash.Flash{"User cannot create. Please try again!", flash.FlashError})		
 	}
 	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 var GetUserController = &UserController{Render: renderView}
+
