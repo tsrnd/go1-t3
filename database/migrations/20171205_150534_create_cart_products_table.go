@@ -19,12 +19,19 @@ func init() {
 
 // Run the migrations
 func (m *CreateCartProductsTable_20171205_150534) Up() {
-	// use m.SQL("CREATE TABLE ...") to make schema update
-	m.CreateTable("cart_products","InnoDB","utf8");
-	m.PriCol("id").SetAuto(true).SetNullable(false).SetDataType("INT(11)").SetUnsigned(true)
-	m.NewCol("cart_id").SetDataType("INT(11)").SetNullable(false).SetUnsigned(true)
-	m.NewCol("product_id").SetDataType("INT(11)").SetNullable(false).SetUnsigned(true)
-	m.NewCol("quantity").SetDataType("INT(11)").SetNullable(false).SetUnsigned(true)
+	m.SQL(`
+		CREATE TABLE cart_products
+		(
+			id SERIAL,
+			cart_id integer NOT NULL REFERENCES carts(id),
+			product_id integer REFERENCES products(id),
+			quantity integer,
+			created_at timestamp(0) without time zone DEFAULT now(),
+			updated_at timestamp(0) without time zone DEFAULT now(),
+			deleted_at timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
+			CONSTRAINT cart_items_pkey PRIMARY KEY (id)
+		)
+	`)
 }
 
 // Reverse the migrations

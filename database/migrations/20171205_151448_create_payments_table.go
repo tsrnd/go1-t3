@@ -18,12 +18,19 @@ func init() {
 
 // Run the migrations
 func (m *CreatePaymentsTable_20171205_151448) Up() {
-	// use m.SQL("CREATE TABLE ...") to make schema update
-	m.CreateTable("payments","InnoDB","utf8");
-	m.PriCol("id").SetAuto(true).SetNullable(false).SetDataType("INT(11)").SetUnsigned(true)
-	m.NewCol("order_id").SetDataType("INT(11)").SetNullable(false).SetUnsigned(true)
-	m.NewCol("account_number").SetDataType("varchar(255)").SetNullable(false)	
-	m.NewCol("bank").SetDataType("varchar(255)").SetNullable(false)
+	m.SQL(`
+		CREATE TABLE payments
+		(
+			id SERIAL,
+			order_id integer NOT NULL REFERENCES orders(id),
+			account_number character varying(45) COLLATE pg_catalog."default",
+			bank character varying(45) COLLATE pg_catalog."default",
+			created_at timestamp without time zone,
+			updated_at timestamp without time zone,
+			deleted_at timestamp without time zone,
+			CONSTRAINT payments_pkey PRIMARY KEY (id)
+		)
+	`)
 }
 
 // Reverse the migrations
