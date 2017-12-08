@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	"github.com/astaxie/beego/orm"
 	model "github.com/goweb3/models"
 )
@@ -32,16 +30,13 @@ func ProcessAddToCart(productID uint, userID uint) (err error) {
 	product.Id = productID
 	err = product.FindByID()
 	if err != nil {
-		fmt.Println("product does not exist")
 		return err
 	}
 	cart := model.Cart{}
 	err = cart.FindByUserID(userID)
 	if err != nil {
-		fmt.Println("cart does not exist")
 		ProcessCreateCard(userID, &cart, &product)
 	} else {
-		fmt.Println("cart already exist")
 		ProcessCheckExistCartProduct(productID, &cart, &product)
 	}
 	return
@@ -76,10 +71,8 @@ func ProcessCheckExistCartProduct(productID uint, cart *model.Cart, product *mod
 	cartProduct := model.CartProduct{}
 	err = cartProduct.FindByCartIDAndProductID(cart.Id, productID)
 	if err != nil {
-		fmt.Println("cart product does not exist")
 		ProcessCreateCartProduct(&cartProduct, cart, product)
 	} else {
-		fmt.Println("cart product already exist")
 		cartProduct.Quantity++
 		cartProduct.Update()
 	}

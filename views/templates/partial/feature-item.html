@@ -1,11 +1,13 @@
 <div class="features_items">
     <!--features_items-->
     <h2 class="title text-center">Features Items</h2>
+    {{ $xsrf := .xsrfdata }}
     {{range .products}}
     <div class="col-sm-4">
             <div class="product-image-wrapper">
                 <div class="single-products">
                     <form action='{{urlfor "CartController.AddToCart" ":id" .Id}}' method="post">
+                         {{ $xsrf }}
                         <div class="productinfo text-center">
                             {{ range .ProductImages }}
                             <img src="/static/images/home/{{.Image}}" alt="" />

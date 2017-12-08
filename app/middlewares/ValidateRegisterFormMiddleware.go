@@ -17,9 +17,9 @@ func ValidateRegisterFormMiddleware() Middleware {
 			return func(w http.ResponseWriter, r *http.Request) {
 				// Do middleware things
 				r.ParseForm()
-				email := strings.Trim(r.Form["email"][0], " ")
-				name := strings.Trim(r.Form["name"][0], " ")
-				password := strings.Trim(r.Form["password"][0], " ")
+				email := strings.Trim(r.FormValue("email"), " ")
+				name := strings.Trim(r.FormValue("name"), " ")
+				password := strings.Trim(r.FormValue("password"), " ")
 				registerRequest := validations.RegisterRequest {
 					Username : name,
 					Email : email,

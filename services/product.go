@@ -16,5 +16,8 @@ func ProcessHompage(data map[interface{}]interface{}) (err error) {
 	qs := o.QueryTable(product)
 	qs.Limit(10).RelatedSel().All(&products)
 	data["products"] = products
+	for _, product = range products {
+		_, err = o.LoadRelated(product, "ProductImages")
+	}
 	return
 }

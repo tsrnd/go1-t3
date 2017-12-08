@@ -1,20 +1,23 @@
 package controllers
 
 import (
+	"html/template"
+
 	"github.com/astaxie/beego"
 	service "github.com/goweb3/services"
-	
 )
 
 type HomeController struct {
 	beego.Controller
 }
 
-func (c *HomeController) Get() {
+func (c *HomeController) Index() {
+	flash := beego.ReadFromRequest(&c.Controller)
+	if n, ok := flash.Data["notice"]; ok {
+		c.Data["notice"] = n
+	}
 	service.ProcessHompage(c.Data)
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	// Page url
-	c.Data["url"] = "/"
+	c.Data["url"] = ""
+	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.TplName = "home/index.html"
 }

@@ -18,7 +18,10 @@ func (this *CartController) Index() {
 
 func (this *CartController) AddToCart() {
 	productID, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
-	userID := uint(30)
-	service.ProcessAddToCart(uint(productID), userID)
+	// sess := this.StartSession()
+	// user := reflect.ValueOf(sess.Get("auth"))
+	// userID := user.FieldByName("Id")
+	userID := uint(1)
+	service.ProcessAddToCart(uint(productID), uint(userID))
 	this.Ctx.Redirect(302, "/cart")
 }

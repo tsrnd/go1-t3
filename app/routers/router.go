@@ -6,17 +6,18 @@ import "net/http"
 import controler "github.com/goweb3/app/controllers"
 import middlewares "github.com/goweb3/app/middlewares"
 
-func routes() *mux.Router {
+// public Routes for test
+func Routes() *mux.Router {
 	r := mux.NewRouter()
 	// Serve static files, no directory browsing
 	r.PathPrefix("/assets/").HandlerFunc(controler.Static)
 	r.HandleFunc("/", controler.Home).Methods("GET")
-	r.HandleFunc("/login", controler.Login).Methods("GET")
+	r.HandleFunc("/login", controler.GetLoginController.Index).Methods("GET")
 	r.HandleFunc("/news", controler.News).Methods("GET")
 	r.HandleFunc("/contact", controler.Contact).Methods("GET")
 	r.HandleFunc("/shoe", controler.Shoe).Methods("GET")
-	r.HandleFunc("/register", middlewares.Chain(controler.Register, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
-	r.HandleFunc("/login", middlewares.Chain(controler.LoginPost, middlewares.ValidateLoginFormMiddleware())).Methods("POST")
+	r.HandleFunc("/register", middlewares.Chain(controler.GetUserController.Create, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
+	r.HandleFunc("/login", controler.GetLoginController.Login).Methods("POST")
 	r.HandleFunc("/logout", controler.Logout).Methods("GET")
 	r.HandleFunc("/checkout", middlewares.Chain(controler.Checkout, middlewares.LoginMiddleware())).Methods("GET")
 	r.HandleFunc("/checkout", middlewares.Chain(controler.CheckoutPost, middlewares.LoginMiddleware())).Methods("POST")
@@ -29,7 +30,7 @@ func routes() *mux.Router {
 }
 
 func HTTP() http.Handler {
-	return middleware(routes())
+	return middleware(Routes())
 }
 
 func middleware(h http.Handler) http.Handler {

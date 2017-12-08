@@ -3,14 +3,14 @@ package models
 import (
 	"github.com/astaxie/beego/orm"
 	"github.com/goweb3/app/shared/database"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/goweb3/utils"
 )
 
 type User struct {
-	Id       uint
-	Name     string
-	Email    string
-	Password string
+	Id       uint    `form:"-"`
+	Name     string  `form:"name"`
+	Email    string  `form:"email"`
+	Password string  `form:"password"`
 	Cart     []*Cart `orm:"reverse(many)"`
 }
 
@@ -27,11 +27,16 @@ func (p *User) TableName() string {
 * Hash password of user
 **/
 func (user *User) HashPassword() error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
-	if err == nil {
-		user.Password = string(bytes)
-	}
+	pass, err := utils.HashString(user.Password)
+	user.Password = pass
 	return err
+}
+
+func (user *User) SetUser(userTmp User) {
+	user.Id = userTmp.Id
+	user.Email = userTmp.Email
+	user.Name = userTmp.Name
+	user.Password = userTmp.Password
 }
 
 /**
