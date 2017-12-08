@@ -1,2 +1,7 @@
 conf/app.conf
 .vscode
+goweb3
+vendor/*
+*.DS_Store
+Gopkg.lock
+Gopkg.toml
