@@ -63,7 +63,7 @@
                 <div class="col-sm-4">
                     <div class="logo pull-left">
                         <a href="/">
-                            <img src="/assets/images/home/logo.png" alt="" />
+                            <img src="/static/images/home/logo.png" alt="" />
                         </a>
                     </div>
                     <div class="btn-group pull-right">
@@ -147,29 +147,29 @@
                     <div class="mainmenu pull-left">
                         <ul class="nav navbar-nav collapse navbar-collapse">
                             <li>
-                                <a {{if eq .url "/"}} class="active" {{ end }} href="/">Home</a>
+                                <a href="/">Home</a>
                             </li>
                             <li class="dropdown">
-                                <a {{if eq .url "/sport-wear" "/shoe" "/bag" }} class="active" {{ end }} href="/">Category
+                                <a href="/">Category
                                     <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul role="menu" class="sub-menu">
                                     <li>
-                                        <a {{if eq .url "/sport-wear"}} class="active" {{ end }} href="/sport-wear">SPORTSWEAR</a>
+                                        <a href="/sport-wear">SPORTSWEAR</a>
                                     </li>
                                     <li>
-                                        <a {{if eq .url "/shoe"}} class="active" {{ end }} href="/shoe">SHOES</a>
+                                        <a href="/shoe">SHOES</a>
                                     </li>
                                     <li>
-                                        <a {{if eq .url "/bag"}} class="active" {{ end }} href="/bag">BAGS</a>
+                                        <a href="/bag">BAGS</a>
                                     </li>
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a {{if eq .url "/news"}} class="active" {{ end }} href="/news">News</a>
+                                <a href="/news">News</a>
                             </li>
                             <li>
-                                <a {{if eq .url "/contact"}} class="active" {{ end }} href="/contact">Contact</a>
+                                <a href="/contact">Contact</a>
                             </li>
                         </ul>
                     </div>

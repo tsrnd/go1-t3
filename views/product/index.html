@@ -1,20 +1,21 @@
+{{ template "templates/layout.html" .}}
 {{ define "title" }} Product detail title {{ end }}
 {{ define "content" }}
 <section>
     <div class="container">
         <div class="row">
-            {{template "left-sidebar.html" .}}
+            {{template "templates/partial/left-sidebar.html" .}}
             <!-- /Left sidebar -->
 
             <div class="col-sm-9 padding-right">
                 
-                {{template "product-detail.html" .}}
+                {{template "templates/partial/product-detail.html" .}}
                 <!--/product-details-->
 
-                {{template "category-tab.html" .}}
+                {{template "templates/partial/category-tab.html" .}}
                 <!--/category-tab-->
 
-                {{template "recommend-item.html" .}}
+                {{template "templates/partial/recommend-item.html" .}}
                 <!--/recommended-items-->
 
             </div>

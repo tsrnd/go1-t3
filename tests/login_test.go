@@ -7,26 +7,29 @@ import (
 	"strings"
 	"testing"
 
-	controller "github.com/goweb3/app/controllers"
-	"github.com/goweb3/app/shared/view"
+	_ "github.com/goweb3/routers"
+
+	"github.com/astaxie/beego"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
-var render = func(w http.ResponseWriter, v *view.View) {
-	return
-}
-
-func TestLoginSuccess(t *testing.T) {
+func TestLogin(t *testing.T) {
 	form := url.Values{}
-	form.Add("email", "duy@gmail.com")
+	form.Add("email", "dungvan@abc.com")
 	form.Add("password", "123456")
-	req, err := http.NewRequest("POST", "/login", strings.NewReader(form.Encode()))
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	if err != nil {
-		t.Fatal(err)
-	}
-	rr := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/login", strings.NewReader(form.Encode()))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	w := httptest.NewRecorder()
+	beego.BeeApp.Handlers.ServeHTTP(w, r)
 
-	loginController := &controller.LoginController{Render: render}
-	handler := http.HandlerFunc(loginController.Login)
-	handler.ServeHTTP(rr, req)
+	beego.Trace("testing", "TestBeego", "Code[%d]\n%s", w.Code, w.Body.String())
+
+	Convey("Subject: Test Station Endpoint\n", t, func() {
+		Convey("Status Code Should Be 200", func() {
+			So(w.Code, ShouldEqual, 200)
+		})
+		Convey("The Result Should Not Be Empty", func() {
+			So(w.Body.Len(), ShouldEqual, 0)
+		})
+	})
 }

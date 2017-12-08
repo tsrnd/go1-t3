@@ -1,38 +1,32 @@
 package main
 
 import (
-	"encoding/json"
-	"os"
-
-	route "github.com/goweb3/app/routers"
-	"github.com/goweb3/app/shared/database"
-	"github.com/goweb3/app/shared/jsonconfig"
-	"github.com/goweb3/app/shared/server"
-	"github.com/goweb3/app/shared/view"
+	_ "github.com/goweb3/routers"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/session"	
+	"fmt"
 )
 
-var config = &configuration{}
+func init() {
+	
+	orm.RegisterDriver("postgres", orm.DRPostgres)
+	host := beego.AppConfig.String("postgres_host")
+	port, _ := beego.AppConfig.Int("postgres_port")
+	username := beego.AppConfig.String("postgres_user")
+	pass := beego.AppConfig.String("postgres_pass")
+	dbname := beego.AppConfig.String("postgres_dbname")
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, username, pass, dbname)
+	orm.RegisterDataBase("default", "postgres", psqlInfo);
 
-// configuration contains the application settings
-type configuration struct {
-	Database database.Info `json:"Database"`
-	Template view.Template `json:"Template"`
-	View     view.View     `json:"View"`
-	Server   server.Server `json:"Server"`
+	sessionconf := &session.ManagerConfig{
+		CookieName: "begoosessionID",
+		Gclifetime: 3600,
+	}
+	beego.GlobalSessions, _ = session.NewManager("memory", sessionconf)
+	go beego.GlobalSessions.GC()
 }
 
 func main() {
-	// Load the configuration file
-	jsonconfig.Load("config"+string(os.PathSeparator)+"config.json", config)
-	database.Connect(config.Database)
-	// Setup the views
-	view.Configure(config.View)
-	view.LoadTemplates(config.Template.Root, config.Template.Children)
-	server.Run(route.HTTP(), config.Server)
-
-}
-
-// ParseJSON unmarshals bytes to structs
-func (c *configuration) ParseJSON(b []byte) error {
-	return json.Unmarshal(b, &c)
+	beego.Run()
 }
