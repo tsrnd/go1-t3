@@ -41,3 +41,15 @@ func (this *UserController) Register() {
 		this.Redirect("/login", 302)
 	}
 }
+
+/**
+*
+*
+**/
+func (this *UserController) Logout() {
+	this.DestroySession()
+	flash := beego.NewFlash()
+	flash.Notice("Logout success!")
+	flash.Store(&this.Controller)
+	this.Redirect("/", 302)
+}

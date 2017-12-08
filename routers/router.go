@@ -11,7 +11,9 @@ func init() {
 	beego.Router("/", &controllers.HomeController{}, "get:Index")
 	beego.Router("/login", &controllers.LoginController{}, "get:Index;post:Login")
 	beego.Router("/guest/register", &controllers.UserController{}, "post:Register")
+	beego.Router("/logout", &controllers.UserController{}, "get:Logout")	
 }
 func loadFilters() {
-	beego.InsertFilter("/cart", beego.BeforeRouter, filters.ProtectUserPages)	
+	beego.InsertFilter("/cart", beego.BeforeRouter, filters.ProtectUserPages)
+	beego.InsertFilter("/login", beego.BeforeRouter, filters.UserIsLogged)
 }
