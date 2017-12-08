@@ -2,47 +2,22 @@
     <!--product-details-->
     <div class="col-sm-5">
         <div class="view-product">
-            <img src="http://localhost:8080/static/images/product-details/1.jpg" alt="" />
+            <img src={{.product.PrimaryImage}} alt="" />
             <h3>ZOOM</h3>
         </div>
         <div id="similar-product" class="carousel slide" data-ride="carousel">
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner">
-                <div class="item active">
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar1.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar2.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar3.jpg" alt="">
-                    </a>
-                </div>
+                {{ range $key, $val := .product.Images}}
                 <div class="item">
+                    {{ range $key, $value := $val }}
                     <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar1.jpg" alt="">
+                        <img src={{$value}} alt="">
                     </a>
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar2.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar3.jpg" alt="">
-                    </a>
+                    {{ end }}
                 </div>
-                <div class="item">
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar1.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar2.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="http://localhost:8080/static/images/product-details/similar3.jpg" alt="">
-                    </a>
-                </div>
-
+                {{ end }}
             </div>
 
             <!-- Controls -->
@@ -58,10 +33,10 @@
     <div class="col-sm-7">
         <div class="product-information">
             <!--/product-information-->
-            <img src="http://localhost:8080/static/images/product-details/new.jpg" class="newarrival" alt="" />
+            <img src="/static/images/product-details/new.jpg" class="newarrival" alt="" />
             <h2>{{.product.Name}}</h2>
             <p>Web Id: {{.product.Id}}</p>
-            <img src="http://localhost:8080/static/images/product-details/rating.png" alt="" />
+            <img src="/static/images/product-details/rating.png" alt="" />
             <span>
                 <span>{{.product.Price}}</span>
                 <label>Quantity:</label>
@@ -78,7 +53,7 @@
             <p> 
                 <b>Brand:</b> E-SHOPPER</p>
             <a href="">
-                <img src="http://localhost:8080/static/images/product-details/share.png" class="share img-responsive" alt="" />
+                <img src="/static/images/product-details/share.png" class="share img-responsive" alt="" />
             </a>
         </div>
         <!--/product-information-->
