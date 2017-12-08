@@ -39,6 +39,7 @@
                     <form action="/guest/register" method="post">
                         <input type="text" name="name" placeholder="Name" required/>
                         <span><small style="color: red">
+                            
                             {{.message.RegisterUsernameREQUIRED}}
                             {{.message.RegisterUsernameMIN}}
                             {{.message.RegisterUsernameMAX}}
@@ -54,6 +55,7 @@
 
                         <input type="password" name="password" placeholder="Password" required />
                         <span><small style="color: red">
+                            {{.form }}
                             {{.message.RegisterPaswordREQUIRED}}
                             {{.message.RegisterPasswordMIN}}
                         </small></span>

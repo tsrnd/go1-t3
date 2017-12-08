@@ -19,11 +19,18 @@ func init() {
 
 // Run the migrations
 func (m *CreateProductImagesTable_20171205_150729) Up() {
-	// use m.SQL("CREATE TABLE ...") to make schema update
-	m.CreateTable("product_images","InnoDB","utf8");
-	m.PriCol("id").SetAuto(true).SetNullable(false).SetDataType("INT(11)").SetUnsigned(true)
-	m.NewCol("product_id").SetDataType("INT(11)").SetNullable(false).SetUnsigned(true)
-	m.NewCol("image").SetDataType("text").SetNullable(true)
+	m.SQL(`
+		CREATE TABLE product_images
+		(
+			id SERIAL,
+			product_id integer NOT NULL REFERENCES products(id),
+			image character varying(45) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+			created_at timestamp(0) without time zone DEFAULT now(),
+			update_at timestamp(0) without time zone DEFAULT now(),
+			deleted_at timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
+			CONSTRAINT product_images_pkey PRIMARY KEY (id)
+		)
+	`)
 }
 
 // Reverse the migrations
