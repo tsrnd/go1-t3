@@ -19,13 +19,20 @@ func init() {
 
 // Run the migrations
 func (m *CreateOdersTable_20171205_150922) Up() {
-	// use m.SQL("CREATE TABLE ...") to make schema update
-	m.CreateTable("oders","InnoDB","utf8");
-	m.PriCol("id").SetAuto(true).SetNullable(false).SetDataType("INT(11)").SetUnsigned(true)
-	m.NewCol("user_id").SetDataType("INT(11)").SetNullable(false).SetUnsigned(true)
-	m.NewCol("name_receiver").SetDataType("text").SetNullable(false)
-	m.NewCol("address").SetDataType("text").SetNullable(false)
-	m.NewCol("Status").SetDataType("INT(1)").SetNullable(false).SetUnsigned(true)
+	m.SQL(`
+		CREATE TABLE orders
+		(
+			id SERIAL,
+			user_id integer NOT NULL REFERENCES users(id),
+			name_receiver character varying(45) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+			address character varying(45) COLLATE pg_catalog."default" DEFAULT NULL::character varying,
+			status integer,
+			created_at timestamp(0) without time zone DEFAULT now(),
+			updated_at timestamp(0) without time zone DEFAULT now(),
+			deleted_at timestamp without time zone,
+			CONSTRAINT orders_pkey PRIMARY KEY (id)
+		)
+	`)
 }
 
 // Reverse the migrations

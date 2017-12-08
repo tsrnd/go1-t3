@@ -19,10 +19,17 @@ func init() {
 
 // Run the migrations
 func (m *CreateCategoryTable_20171205_145407) Up() {
-	// use m.SQL("CREATE TABLE ...") to make schema update
-	m.CreateTable("categories","InnoDB","utf8");
-	m.PriCol("id").SetAuto(true).SetNullable(false).SetDataType("INT(11)").SetUnsigned(true)
-	m.NewCol("name").SetDataType("VARCHAR(45) COLLATE utf8_unicode_ci").SetNullable(false)
+	m.SQL(`
+		CREATE TABLE categories
+		(
+			id SERIAL,
+			name character varying(45) COLLATE pg_catalog."default" NOT NULL,
+			created_at timestamp(0) without time zone DEFAULT now(),
+			updated_at timestamp(0) without time zone DEFAULT now(),
+			deleted_at timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
+			CONSTRAINT categories_pkey PRIMARY KEY (id)
+		)
+	`)
 }
 
 // Reverse the migrations

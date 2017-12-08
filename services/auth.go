@@ -19,7 +19,7 @@ func (auth *AuthService) Login(email string, password string) (err error) {
 	flash := beego.NewFlash()
 	if (user != model.User{}) && utils.MatchString(user.Password, password) {
 		sess := utils.Controller.StartSession()
-		sess.Set("user", user)
+		sess.Set("auth", user)
 		flash.Notice("Login success!")
 		flash.Store(utils.Controller)
 		return nil
