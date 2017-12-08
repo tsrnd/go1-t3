@@ -1,26 +1,29 @@
 package controllers
 
 import (
+	"html/template"
+
 	"github.com/astaxie/beego"
 	"github.com/goweb3/services"
 	"github.com/goweb3/utils"
-	"html/template"
 )
+
 type LoginController struct {
 	beego.Controller
 }
+
 var (
-	auth services.AuthService
+	auth    services.AuthService
 	session utils.SessionUtil
 )
 
 func (c *LoginController) Index() {
 	flash := beego.ReadFromRequest(&c.Controller)
 	if n, ok := flash.Data["error"]; ok {
-        c.Data["error"] = n
+		c.Data["error"] = n
 	}
 	if n, ok := flash.Data["notice"]; ok {
-        c.Data["notice"] = n
+		c.Data["notice"] = n
 	}
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["url"] = ""
