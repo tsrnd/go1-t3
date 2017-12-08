@@ -1,13 +1,14 @@
 package services
 
 import (
-	model "github.com/goweb3/models"
-	"github.com/astaxie/beego/orm"
-	"github.com/goweb3/utils"
 	"errors"
+
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	model "github.com/goweb3/models"
+	"github.com/goweb3/utils"
 )
- 
+
 type AuthService struct {
 }
 
@@ -15,9 +16,9 @@ func (auth *AuthService) Login(email string, password string) (err error) {
 	user := model.User{}
 	o := orm.NewOrm()
 	qs := o.QueryTable(user)
-	qs.Filter("email", email).One(&user)
+	err = qs.Filter("email", email).One(&user)
 	flash := beego.NewFlash()
-	if (user != model.User{}) && utils.MatchString(user.Password, password) {
+	if err == nil && utils.MatchString(user.Password, password) {
 		sess := utils.Controller.StartSession()
 		sess.Set("auth", user)
 		flash.Notice("Login success!")

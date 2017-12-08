@@ -1,15 +1,16 @@
 package main
 
 import (
-	_ "github.com/goweb3/routers"
+	"fmt"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/session"	
-	"fmt"
+	"github.com/astaxie/beego/session"
+	_ "github.com/goweb3/routers"
 )
 
 func init() {
-	
+
 	orm.RegisterDriver("postgres", orm.DRPostgres)
 	host := beego.AppConfig.String("postgres_host")
 	port, _ := beego.AppConfig.Int("postgres_port")
@@ -17,7 +18,7 @@ func init() {
 	pass := beego.AppConfig.String("postgres_pass")
 	dbname := beego.AppConfig.String("postgres_dbname")
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, username, pass, dbname)
-	orm.RegisterDataBase("default", "postgres", psqlInfo);
+	orm.RegisterDataBase("default", "postgres", psqlInfo)
 
 	sessionconf := &session.ManagerConfig{
 		CookieName: "begoosessionID",
