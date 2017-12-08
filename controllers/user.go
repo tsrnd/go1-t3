@@ -2,13 +2,14 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/goweb3/services"
 	"github.com/goweb3/models"
+	"github.com/goweb3/services"
 )
 
 type UserController struct {
 	beego.Controller
 }
+
 var (
 	userService services.UserService
 )
