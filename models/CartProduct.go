@@ -1,33 +1,38 @@
 package models
 
 import (
-	"github.com/goweb3/app/shared/database"
 	"github.com/astaxie/beego/orm"
+	"github.com/goweb3/app/shared/database"
 )
 
 type CartProduct struct {
-	Id uint
-	Cart *Cart `orm:"column(cart_id);rel(fk)"`		
-	Product *Product `orm:"column(product_id);rel(fk)"`	
+	Id       uint
+	Cart     *Cart    `orm:"column(cart_id);rel(fk)"`
+	Product  *Product `orm:"column(product_id);rel(fk)"`
 	Quantity uint
 }
-func init() {
-    orm.RegisterModel(new(CartProduct))
+
+func (p *CartProduct) TableName() string {
+	return "cart_products"
 }
+
+func init() {
+	orm.RegisterModel(new(CartProduct))
+}
+
 /**
 *
 * Price follow quantity
 **/
-func (cartProduct *CartProduct) PriceFollowQuantity() (int) {
+func (cartProduct *CartProduct) PriceFollowQuantity() int {
 	return int(cartProduct.Quantity) * cartProduct.Product.Price
 }
-
 
 /**
 *
 * Delete
 **/
-func (cartProduct *CartProduct) Delete() (error) {
+func (cartProduct *CartProduct) Delete() error {
 	err := database.SQL.Delete(&cartProduct).Error
 	return err
 }
@@ -37,7 +42,8 @@ func (cartProduct *CartProduct) Delete() (error) {
 * Create cart product
 **/
 func (cartProduct *CartProduct) Create() (err error) {
-	err = database.SQL.Create(&cartProduct).Error
+	o := orm.NewOrm()
+	_, err = o.Insert(cartProduct)
 	return
 }
 
@@ -46,7 +52,8 @@ func (cartProduct *CartProduct) Create() (err error) {
 * Update cart product
 **/
 func (cartProduct *CartProduct) Update() (err error) {
-	database.SQL.Save(cartProduct)
+	o := orm.NewOrm()
+	_, err = o.Update(cartProduct)
 	return
 }
 
@@ -54,10 +61,10 @@ func (cartProduct *CartProduct) Update() (err error) {
 *
 * Find cart product by cart id and product id
 **/
-func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID uint) error {
-	var err error
-	err = database.SQL.Where("cart_id = ? AND product_id =?", cartID, productID).First(&cartProduct).Error
-	return err
+func (c *CartProduct) FindByCartIDAndProductID(cartID uint, productID uint) (err error) {
+	o := orm.NewOrm()
+	err = o.QueryTable("cart_products").Filter("cart_id", cartID).Filter("product_id", productID).One(c)
+	return
 }
 
 /**

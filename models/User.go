@@ -1,20 +1,27 @@
 package models
 
 import (
+	"github.com/astaxie/beego/orm"
 	"github.com/goweb3/app/shared/database"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/astaxie/beego/orm"
 )
 
 type User struct {
-	Id uint
-	Name string
-	Email string
+	Id       uint
+	Name     string
+	Email    string
 	Password string
+	Cart     []*Cart `orm:"reverse(many)"`
 }
+
 func init() {
-    orm.RegisterModel(new(User))
+	orm.RegisterModel(new(User))
 }
+
+func (p *User) TableName() string {
+	return "users"
+}
+
 /**
 *
 * Hash password of user
@@ -53,4 +60,14 @@ func (user *User) Create() (err error) {
 func (user *User) FindByEmail(email string) (err error) {
 	err = database.SQL.Where("email = ?", email).First(&user).Error
 	return err
+}
+
+/**
+*
+* Find user by ID
+**/
+func (user *User) FindByID() (err error) {
+	o := orm.NewOrm()
+	err = o.Read(user)
+	return
 }

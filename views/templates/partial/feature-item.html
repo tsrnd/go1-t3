@@ -5,23 +5,23 @@
     <div class="col-sm-4">
             <div class="product-image-wrapper">
                 <div class="single-products">
-                    <div class="productinfo text-center">
-                        {{ range .ProductImages }}
-                        <img src="/static/images/home/{{.Image}}" alt="" />
-                        {{ end }}
-                        <h2>${{.Price}}</h2>
-                        <p>{{.Name}}</p>
-                        <a href="/cart/{{.Id}}" class="btn btn-default add-to-cart">
-                            <i class="fa fa-shopping-cart"></i>Add to cart</a>
-                    </div>
-                    <div class="product-overlay">
-                        <div class="overlay-content">
+                    <form action='{{urlfor "CartController.AddToCart" ":id" .Id}}' method="post">
+                        <div class="productinfo text-center">
+                            {{ range .ProductImages }}
+                            <img src="/static/images/home/{{.Image}}" alt="" />
+                            {{ end }}
                             <h2>${{.Price}}</h2>
                             <p>{{.Name}}</p>
-                            <a href="/cart/{{.Id}}" class="btn btn-default add-to-cart">
-                                <i class="fa fa-shopping-cart"></i>Add to cart</a>
+                            <button type="submit" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</button>
                         </div>
-                    </div>
+                        <div class="product-overlay">
+                            <div class="overlay-content">
+                                <h2>${{.Price}}</h2>
+                                <p>{{.Name}}</p>
+                                <button type="submit" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="choose">
                     <ul class="nav nav-pills nav-justified">
@@ -37,6 +37,5 @@
                 </div>
             </div>
         </div>
-        
     {{end}}
 </div>

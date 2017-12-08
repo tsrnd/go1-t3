@@ -1,18 +1,23 @@
 package models
 
 import (
-	"github.com/goweb3/app/shared/database"
 	"github.com/astaxie/beego/orm"
+	"github.com/goweb3/app/shared/database"
 )
 
 type Cart struct {
-	Id	uint
+	Id           uint
 	CartProducts []*CartProduct `orm:"reverse(many)"`
-	User *User `orm:"column(user_id);rel(fk)"`
+	User         *User          `orm:"column(user_id);rel(fk)"`
 }
+
 func init() {
-    orm.RegisterModel(new(Cart))
+	orm.RegisterModel(new(Cart))
 }
+func (p *Cart) TableName() string {
+	return "carts"
+}
+
 /**
 *
 * Find cart by user_id
@@ -27,7 +32,8 @@ func (cart *Cart) FindByUserId(userId int) (err error) {
 * Create cart
 **/
 func (cart *Cart) Create() (err error) {
-	err = database.SQL.Create(&cart).Error
+	o := orm.NewOrm()
+	_, err = o.Insert(cart)
 	return
 }
 
@@ -35,7 +41,7 @@ func (cart *Cart) Create() (err error) {
 *
 * Total price cart
 **/
-func (cart *Cart) TotalPrice() (int) {
+func (cart *Cart) TotalPrice() int {
 	sum := 0
 	for _, v := range cart.CartProducts {
 		sum += int(v.Quantity) * v.Product.Price
@@ -47,7 +53,7 @@ func (cart *Cart) TotalPrice() (int) {
 *
 * Delete
 **/
-func (cart *Cart) Delete() (error) {
+func (cart *Cart) Delete() error {
 	err := database.SQL.Delete(&cart).Error
 	return err
 }
@@ -56,8 +62,8 @@ func (cart *Cart) Delete() (error) {
 *
 * Find cart by user id
 **/
-func (cart *Cart) FindByUserID(userID uint) error {
-	var err error
-	err = database.SQL.Where("user_id = ?", userID).First(&cart).Error
-	return err
+func (c *Cart) FindByUserID(userID uint) (err error) {
+	o := orm.NewOrm()
+	err = o.QueryTable("carts").Filter("user_id", userID).One(c)
+	return
 }
