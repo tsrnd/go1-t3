@@ -11,7 +11,7 @@ type Product struct {
 	Description string
 	Quantity int
 	Price int
-	ProductImages []*ProductImage `orm:"reverse(many)"`
+	Images []*ProductImage `orm:"reverse(many)"`
 }
 func init() {
     orm.RegisterModel(new(Product))
