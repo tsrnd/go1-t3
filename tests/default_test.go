@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"testing"
 
+	"github.com/goweb3/bootstrap"
 	_ "github.com/goweb3/routers"
 
 	"github.com/astaxie/beego"
@@ -16,6 +17,9 @@ import (
 )
 
 func init() {
+
+	bootstrap.AutoloadEnv()
+
 	_, file, _, _ := runtime.Caller(1)
 	apppath, _ := filepath.Abs(filepath.Dir(filepath.Join(file, ".."+string(filepath.Separator))))
 	beego.TestBeegoInit(apppath)
