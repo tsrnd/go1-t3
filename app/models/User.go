@@ -2,15 +2,14 @@ package models
 
 import (
 	"github.com/goweb3/app/shared/database"
-	"github.com/jinzhu/gorm"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/goweb3/app/shared/passhash"
 )
 
 type User struct {
-	gorm.Model
-	Name string			`schema:"name"`
-	Email string		`schema:"email"`
-	Password string		`schema:"password"`
+	BaseModel
+	Name 	  string	`db:"name"`
+	Email     string	`db:"email"`
+	Password  string	`db:"password"`
 }
 
 /**
@@ -18,9 +17,9 @@ type User struct {
 * Hash password of user
 **/
 func (user *User) HashPassword() error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	pass, err := passhash.HashString(user.Password)
 	if err == nil {
-		user.Password = string(bytes)
+		user.Password = pass
 	}
 	return err
 }
@@ -29,10 +28,9 @@ func (user *User) HashPassword() error {
 *
 * Find user by name
 **/
-func (user *User) FindByName(name string) error {
-	var err error
-	err = database.SQL.Where("name = ?", name).First(&user).Error
-	return err
+func (user *User) FindByName(name string) (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, email FROM users WHERE name = $1", name).Scan(&user.ID, &user.Name, &user.Email)
+	return
 }
 
 /**
@@ -40,7 +38,12 @@ func (user *User) FindByName(name string) error {
 * Create user
 **/
 func (user *User) Create() (err error) {
-	err = database.SQL.Create(&user).Error
+	statement := "insert into users (name, email) values ($1, $2) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	err = stmt.QueryRow(user.Name, user.Email).Scan(&user.ID)
 	return
 }
 
@@ -49,6 +52,10 @@ func (user *User) Create() (err error) {
 * Find user by Email
 **/
 func (user *User) FindByEmail(email string) (err error) {
-	err = database.SQL.Where("email = ?", email).First(&user).Error
+
+	err = database.SQL.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+		if err != nil {
+			return
+	}
 	return err
 }

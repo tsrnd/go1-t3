@@ -1,11 +1,10 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"	
 )
 
 type ProductCategory struct {
-	gorm.Model
-	ProductID uint		`schema:"product_id"`
-	CategoryID uint		`schema:"category_id"`
+	BaseModel
+	ProductID uint	`db:"product_id"`
+	CategoryID uint	`db:"category_id"`
 }

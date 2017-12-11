@@ -1,16 +1,15 @@
 package models
 
 import (
-	"github.com/goweb3/app/shared/database"
-	"github.com/jinzhu/gorm"
+	// "github.com/goweb3/app/shared/database"
 )
 
 type CartProduct struct {
-	gorm.Model
-	CartID    uint    `schema:"cart_id"`
-	ProductID uint    `schema:"product_id"`
-	Quantity  uint    `schema:"quantity"`
-	Product   Product `gorm:"ForeignKey:ProductID"`
+	BaseModel
+	CartID    uint    `db:"cart_id"`
+	ProductID uint    `db:"product_id"`
+	Quantity  uint    `db:"quantity"`
+	Product   Product
 }
 
 /**
@@ -25,8 +24,8 @@ func (cartProduct *CartProduct) PriceFollowQuantity() uint {
 *
 * Delete
 **/
-func (cartProduct *CartProduct) Delete() error {
-	err := database.SQL.Delete(&cartProduct).Error
+func (cartProduct *CartProduct) Delete() (err error) {
+	// err := database.SQL.Delete(&cartProduct).Error
 	return err
 }
 
@@ -35,7 +34,7 @@ func (cartProduct *CartProduct) Delete() error {
 * Create cart product
 **/
 func (cartProduct *CartProduct) Create() (err error) {
-	err = database.SQL.Create(&cartProduct).Error
+	// err = database.SQL.Create(&cartProduct).Error
 	return
 }
 
@@ -44,7 +43,7 @@ func (cartProduct *CartProduct) Create() (err error) {
 * Update cart product
 **/
 func (cartProduct *CartProduct) Update() (err error) {
-	database.SQL.Save(cartProduct)
+	// database.SQL.Save(cartProduct)
 	return
 }
 
@@ -52,9 +51,8 @@ func (cartProduct *CartProduct) Update() (err error) {
 *
 * Find cart product by cart id and product id
 **/
-func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID uint) error {
-	var err error
-	err = database.SQL.Where("cart_id = ? AND product_id =?", cartID, productID).First(&cartProduct).Error
+func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID uint) (err error) {
+	// err = database.SQL.Where("cart_id = ? AND product_id =?", cartID, productID).First(&cartProduct).Error
 	return err
 }
 
@@ -63,7 +61,7 @@ func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID 
 * Find cart products by cart id
 **/
 func (cartProduct *CartProduct) FindByCartID(cartID uint) (cartProducts []CartProduct) {
-	database.SQL.Where("cart_id = ?", cartID).Find(&cartProducts)
+	// database.SQL.Where("cart_id = ?", cartID).Find(&cartProducts)
 	return
 }
 
@@ -72,6 +70,6 @@ func (cartProduct *CartProduct) FindByCartID(cartID uint) (cartProducts []CartPr
 * Get all cart products by cart id
 **/
 func (cartProduct *CartProduct) GetByCartID(cartID uint) (cartProducts []CartProduct) {
-	database.SQL.Preload("Product").Where("cart_id = ?", cartID).Find(&cartProducts)
+	// database.SQL.Preload("Product").Where("cart_id = ?", cartID).Find(&cartProducts)
 	return
 }

@@ -3,8 +3,7 @@ package database
 import (
 	_ "github.com/lib/pq"
 	"fmt"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"database/sql"
 )
 type PostgresInfo struct {
 	Username string
@@ -13,9 +12,9 @@ type PostgresInfo struct {
 	Hostname string
 	Port int
 }
-func (p PostgresInfo) connect() (*gorm.DB, error) {
+func (p PostgresInfo) connect() (*sql.DB, error) {
 	psqlInfo := dnsInfo(p)
-	db, err := gorm.Open("postgres", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo)
 	
 	if err != nil {
 		fmt.Println("err connect database", err)
@@ -23,6 +22,7 @@ func (p PostgresInfo) connect() (*gorm.DB, error) {
 	}
 	return db, err
 }
+
 func dnsInfo(p PostgresInfo) string {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s sslmode=disable",
