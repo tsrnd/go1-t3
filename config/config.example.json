@@ -51,7 +51,8 @@
 			"templates/partial/feature-item",
 			"templates/partial/top-advertisement",
 			"templates/partial/breadcrumb",
-			"templates/partial/product-detail"
+			"templates/partial/product-detail",
+			"templates/partial/modal"
 		]
 	},
 	"View": {
