@@ -3,10 +3,7 @@ package controller
 import "net/http"
 import "github.com/goweb3/app/models"
 import "strings"
-import 	"github.com/goweb3/app/shared/flash"
-
-	"github.com/goweb3/app/models"
-)
+import "github.com/goweb3/app/shared/flash"
 
 func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
