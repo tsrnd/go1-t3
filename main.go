@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/json"
 	"os"
+
 	route "github.com/goweb3/app/routers"
 	"github.com/goweb3/app/shared/database"
 	"github.com/goweb3/app/shared/jsonconfig"
-	"github.com/goweb3/app/shared/view"
 	"github.com/goweb3/app/shared/server"
-	
+	"github.com/goweb3/app/shared/view"
 )
 
 var config = &configuration{}

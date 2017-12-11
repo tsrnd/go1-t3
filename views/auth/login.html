@@ -1,6 +1,3 @@
-r.HandleFunc("/register", middleware.Chain(controler.Login, middleware.ValidateRegisterFormMiddleware())).Methods("POST")
-
-
 {{ define "title" }} Login page title {{ end }}
 {{ define "content" }}
 
