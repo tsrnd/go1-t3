@@ -1,2 +1,7 @@
 config/config.json
 .vscode
+vendor/*
+*.DS_Store
+Gopkg.lock
+Gopkg.toml
+goweb3

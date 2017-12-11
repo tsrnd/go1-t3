@@ -28,8 +28,6 @@ func (l *LoginController) Index(w http.ResponseWriter, r *http.Request) {
 **/
 func (l *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	email := r.FormValue("email")
-	fmt.Println(email)
 	err := service.Auth(w, r)
 	if err == nil {
 		http.Redirect(w, r, "/", http.StatusSeeOther)

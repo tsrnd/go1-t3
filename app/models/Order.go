@@ -1,15 +1,14 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/goweb3/app/shared/database"
+	// "github.com/goweb3/app/shared/database"
 )
 type Order struct {
-	gorm.Model
-	UserID uint				`schema:"user_id"`
-	NameReceiver string		`schema:"name_receiver"`
-	Address string			`schema:"address"`
-	Status uint				`schema:"status"`
+	BaseModel
+	UserID uint			`db:"user_id"`
+	NameReceiver string	`db:"name_receiver"`
+	Address string		`db:"address"`
+	Status uint			`db:"status"`
 }
 
 /**
@@ -17,7 +16,7 @@ type Order struct {
 * Create order
 **/
 func(order *Order) Create() (err error) {
-	err = database.SQL.Create(&order).Error
+	// err = database.SQL.Create(&order).Error
 	return
 }
 
@@ -26,6 +25,6 @@ func(order *Order) Create() (err error) {
 * Find order by order_id
 **/
 func (order *Order) FindById(id uint) (err error) {
-	err = database.SQL.Where("id = ?", id).First(&order).Error
+	// err = database.SQL.Where("id = ?", id).First(&order).Error
 	return err
 }

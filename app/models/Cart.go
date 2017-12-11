@@ -1,14 +1,13 @@
 package models
 
 import (
-	"github.com/goweb3/app/shared/database"
-	"github.com/jinzhu/gorm"
+	// "github.com/goweb3/app/shared/database"
 )
 
 type Cart struct {
-	gorm.Model
+	BaseModel
+	UserID       uint `db:"user_id"`
 	CartProducts []CartProduct
-	UserID       uint `schema:"user_id"`
 }
 
 /**
@@ -16,7 +15,7 @@ type Cart struct {
 * Create cart
 **/
 func (cart *Cart) Create() (err error) {
-	err = database.SQL.Create(&cart).Error
+	// err = database.SQL.Create(&cart).Error
 	return
 }
 
@@ -36,8 +35,8 @@ func (cart *Cart) TotalPrice() uint {
 *
 * Delete
 **/
-func (cart *Cart) Delete() error {
-	err := database.SQL.Delete(&cart).Error
+func (cart *Cart) Delete() (err error) {
+	// err := database.SQL.Delete(&cart).Error
 	return err
 }
 
@@ -45,8 +44,7 @@ func (cart *Cart) Delete() error {
 *
 * Find cart by user id
 **/
-func (cart *Cart) FindByUserID(userID uint) error {
-	var err error
-	err = database.SQL.Where("user_id = ?", userID).First(&cart).Error
+func (cart *Cart) FindByUserID(userID uint) (err error) {
+	// err = database.SQL.Where("user_id = ?", userID).First(&cart).Error
 	return err
 }
