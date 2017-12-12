@@ -1,7 +1,7 @@
 package models
 
 import (
-	// "github.com/goweb3/app/shared/database"
+	"github.com/goweb3/app/shared/database"
 )
 
 type CartProduct struct {
@@ -18,6 +18,15 @@ type CartProduct struct {
 **/
 func (cartProduct *CartProduct) PriceFollowQuantity() uint {
 	return uint(cartProduct.Quantity) * uint(cartProduct.Product.Price)
+}
+
+/**
+*
+* Load Product
+**/
+func (cartProduct *CartProduct) LoadProducts() (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE deleted_at is null AND id = $1", cartProduct.ProductID).Scan(&cartProduct.Product.ID, &cartProduct.Product.Name, &cartProduct.Product.Description, &cartProduct.Product.Quantity, &cartProduct.Product.Price)
+	return
 }
 
 /**
