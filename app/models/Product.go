@@ -1,8 +1,5 @@
 package models
 
-import (
-	// "github.com/goweb3/app/shared/database"
-)
 
 type Product struct {
 	BaseModel
@@ -11,6 +8,10 @@ type Product struct {
 	Quantity      int    `db:"quantity"`
 	Price         int    `db:"price"`
 	ProductImages []ProductImage
+}
+
+func (this *Product) Create() (err error) {
+
 }
 
 /**
