@@ -3,29 +3,33 @@ package router
 import "github.com/gorilla/mux"
 import "github.com/gorilla/csrf"
 import "net/http"
-import controler "github.com/goweb3/app/controllers"
+import controller "github.com/goweb3/app/controllers"
 import middlewares "github.com/goweb3/app/middlewares"
 
 // public Routes for test
 func Routes() *mux.Router {
 	r := mux.NewRouter()
 	// Serve static files, no directory browsing
-	r.PathPrefix("/assets/").HandlerFunc(controler.Static)
-	r.HandleFunc("/", controler.Home).Methods("GET")
-	r.HandleFunc("/login", controler.GetLoginController.Index).Methods("GET")
-	r.HandleFunc("/news", controler.News).Methods("GET")
-	r.HandleFunc("/contact", controler.Contact).Methods("GET")
-	r.HandleFunc("/shoe", controler.Shoe).Methods("GET")
-	r.HandleFunc("/register", middlewares.Chain(controler.GetUserController.Create, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
-	r.HandleFunc("/login", controler.GetLoginController.Login).Methods("POST")
-	r.HandleFunc("/logout", controler.Logout).Methods("GET")
-	r.HandleFunc("/checkout", middlewares.Chain(controler.Checkout, middlewares.LoginMiddleware())).Methods("GET")
-	r.HandleFunc("/checkout", middlewares.Chain(controler.CheckoutPost, middlewares.LoginMiddleware())).Methods("POST")
+	r.PathPrefix("/assets/").HandlerFunc(controller.Static)
+	r.HandleFunc("/", controller.Home).Methods("GET")
+	r.HandleFunc("/login", controller.GetLoginController.Index).Methods("GET")
+	r.HandleFunc("/news", controller.News).Methods("GET")
+	r.HandleFunc("/contact", controller.Contact).Methods("GET")
+	r.HandleFunc("/shoe", controller.Shoe).Methods("GET")
+	r.HandleFunc("/register", middlewares.Chain(controller.GetUserController.Create, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
+	r.HandleFunc("/login", controller.GetLoginController.Login).Methods("POST")
+	r.HandleFunc("/logout", controller.Logout).Methods("GET")
+	r.HandleFunc("/checkout", middlewares.Chain(controller.GetCheckoutController.Index, middlewares.LoginMiddleware())).Methods("GET")
+	r.HandleFunc("/checkout", middlewares.Chain(controller.GetCheckoutController.Store, middlewares.LoginMiddleware())).Methods("POST")
+
+	// Product
+	r.HandleFunc("/products", controller.GetProductController.Index).Methods("GET")
+	r.HandleFunc("/products/{id:[0-9]+}", controller.GetProductController.Show).Methods("GET")
 
 	// Cart
-	r.HandleFunc("/cart", controler.Cart).Methods("GET")
-	r.HandleFunc("/cart/{id:[0-9]+}", controler.AddToCart).Methods("GET")
-	r.HandleFunc("/cart/del/{id:[0-9]+}", controler.DelCartProduct).Methods("GET")
+	r.HandleFunc("/cart", controller.GetCartController.Index).Methods("GET")
+	r.HandleFunc("/cart/{id:[0-9]+}", controller.GetCartController.Store).Methods("GET")
+	r.HandleFunc("/cart/del/{id:[0-9]+}", controller.GetCartController.Destroy).Methods("GET")
 	return r
 }
 

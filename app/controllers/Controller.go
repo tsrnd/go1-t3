@@ -20,11 +20,3 @@ type render func(w http.ResponseWriter, v *view.View)
 var renderView = func(w http.ResponseWriter, v *view.View) {
 	v.Render(w)
 }
-
-type LoginController struct {
-	Render render
-}
-
-type UserController struct {
-	Render render
-}

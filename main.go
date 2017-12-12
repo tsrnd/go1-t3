@@ -29,7 +29,6 @@ func main() {
 	view.Configure(config.View)
 	view.LoadTemplates(config.Template.Root, config.Template.Children)
 	server.Run(route.HTTP(), config.Server)
-
 }
 
 // ParseJSON unmarshals bytes to structs

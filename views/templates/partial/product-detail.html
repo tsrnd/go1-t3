@@ -2,46 +2,22 @@
     <!--product-details-->
     <div class="col-sm-5">
         <div class="view-product">
-            <img src="images/product-details/1.jpg" alt="" />
+            <img src="{{ .product.PrimaryImage }}" alt="" />
             <h3>ZOOM</h3>
         </div>
         <div id="similar-product" class="carousel slide" data-ride="carousel">
 
             <!-- Wrapper for slides -->
             <div class="carousel-inner">
-                <div class="item active">
-                    <a href="">
-                        <img src="images/product-details/similar1.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="images/product-details/similar2.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="images/product-details/similar3.jpg" alt="">
-                    </a>
-                </div>
+                {{ range .product.Images }}
                 <div class="item">
+                    {{ range . }}
                     <a href="">
-                        <img src="images/product-details/similar1.jpg" alt="">
+                        <img src="{{.}}" alt="">
                     </a>
-                    <a href="">
-                        <img src="images/product-details/similar2.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="images/product-details/similar3.jpg" alt="">
-                    </a>
+                    {{ end }}
                 </div>
-                <div class="item">
-                    <a href="">
-                        <img src="images/product-details/similar1.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="images/product-details/similar2.jpg" alt="">
-                    </a>
-                    <a href="">
-                        <img src="images/product-details/similar3.jpg" alt="">
-                    </a>
-                </div>
+                {{ end }}
 
             </div>
 
