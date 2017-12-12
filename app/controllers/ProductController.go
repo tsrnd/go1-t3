@@ -17,7 +17,7 @@ type ProductController struct {
 
 func (this *ProductController) Index(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
-	products, _ := (&models.Product{}).GetAll(100)
+	products, _ := (&models.Product{}).GetAll()
 	for _, product := range products {
 		product.LoadProductImage()
 	}
