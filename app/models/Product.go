@@ -29,13 +29,13 @@ func (this *Product) Create() (err error) {
 	return
 }
 
-func (this *Product) GetAll(limit int) (products []Product, err error) {
-	statement := "select Id, name, description, quantity, price, created_at, updated_at from products where deleted_at is null limit $1"
+func (this *Product) GetAll() (products []Product, err error) {
+	statement := "select Id, name, description, quantity, price, created_at, updated_at from products where deleted_at is null"
 	stmt, err := database.SQL.Prepare(statement)
 	if err != nil {
 		return
 	}
-	rows, err := stmt.Query(limit)
+	rows, err := stmt.Query()
 	if err != nil {
 		return
 	}
