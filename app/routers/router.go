@@ -19,8 +19,8 @@ func Routes() *mux.Router {
 	r.HandleFunc("/register", middlewares.Chain(controller.GetUserController.Create, middlewares.ValidateRegisterFormMiddleware())).Methods("POST")
 	r.HandleFunc("/login", controller.GetLoginController.Login).Methods("POST")
 	r.HandleFunc("/logout", controller.Logout).Methods("GET")
-	r.HandleFunc("/checkout", middlewares.Chain(controller.Checkout, middlewares.LoginMiddleware())).Methods("GET")
-	r.HandleFunc("/checkout", middlewares.Chain(controller.CheckoutPost, middlewares.LoginMiddleware())).Methods("POST")
+	r.HandleFunc("/checkout", middlewares.Chain(controller.GetCheckoutController.Index, middlewares.LoginMiddleware())).Methods("GET")
+	r.HandleFunc("/checkout", middlewares.Chain(controller.GetCheckoutController.Store, middlewares.LoginMiddleware())).Methods("POST")
 
 	// Product
 	r.HandleFunc("/products", controller.GetProductController.Index).Methods("GET")

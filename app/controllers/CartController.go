@@ -10,6 +10,10 @@ import (
 	"github.com/goweb3/app/shared/view"
 )
 
+type CartController struct {
+	Render render
+}
+
 /**
 * Get cart
 *

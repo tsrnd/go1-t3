@@ -9,6 +9,10 @@ import "github.com/jianfengye/web-golang/web/session"
 import "github.com/goweb3/app/shared/cookie"
 import service "github.com/goweb3/app/services"
 
+type CheckoutController struct {
+	Render render
+}
+
 func (this *CheckoutController) Index(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session.SessionStart(r, w)
 

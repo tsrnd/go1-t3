@@ -1,13 +1,16 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/goweb3/app/models"
 	"github.com/goweb3/app/shared/flash"
 )
+
+type UserController struct {
+	Render render
+}
 
 func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -17,12 +20,10 @@ func (u *UserController) Create(w http.ResponseWriter, r *http.Request) {
 		Password: strings.Trim(r.FormValue("password"), " "),
 	}
 	err := user.HashPassword()
-	fmt.Println(user)
 	if err != nil {
 		flash.SetFlash(w, flash.Flash{"Password cannot hash!", flash.FlashError})
 	}
 	err = user.Create()
-	fmt.Println(err)
 	if err != nil {
 		flash.SetFlash(w, flash.Flash{"User cannot create. Please try again!", flash.FlashError})
 	}

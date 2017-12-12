@@ -20,23 +20,3 @@ type render func(w http.ResponseWriter, v *view.View)
 var renderView = func(w http.ResponseWriter, v *view.View) {
 	v.Render(w)
 }
-
-type LoginController struct {
-	Render render
-}
-
-type UserController struct {
-	Render render
-}
-
-type CartController struct {
-	Render render
-}
-
-type ProductController struct {
-	Render render
-}
-
-type CheckoutController struct {
-	Render render
-}

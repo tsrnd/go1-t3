@@ -6,9 +6,14 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/goweb3/app/dto"
 	"github.com/goweb3/app/models"
 	"github.com/goweb3/app/shared/view"
 )
+
+type ProductController struct {
+	Render render
+}
 
 func (this *ProductController) Index(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
@@ -27,7 +32,7 @@ func (this *ProductController) Show(w http.ResponseWriter, r *http.Request) {
 	product := &models.Product{}
 	product.FindByID(uint(product_id))
 	product.LoadProductImage()
-	data := &dataProduct{
+	data := &dto.DataTransferProduct{
 		Id:         product.ID,
 		Name:       product.Name,
 		Descrition: product.Description,
@@ -59,13 +64,3 @@ func (this *ProductController) Show(w http.ResponseWriter, r *http.Request) {
 }
 
 var GetProductController = &ProductController{Render: renderView}
-
-type dataProduct struct {
-	Id           uint
-	Name         string
-	Descrition   string
-	Quantity     int
-	Price        int
-	PrimaryImage string
-	Images       map[int][]string
-}
