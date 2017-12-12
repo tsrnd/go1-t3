@@ -33,6 +33,6 @@ type CartController struct {
 	Render render
 }
 
-type ProductConroller struct {
+type ProductController struct {
 	Render render
 }

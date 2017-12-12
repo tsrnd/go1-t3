@@ -82,7 +82,7 @@ func (product *Product) FindByListID(id uint) error {
 * Load ProductImages
 **/
 func (product *Product) LoadProductImage() (err error) {
-	rows, err := database.SQL.Query("select id, product_id, image form product_images where deleted_at is null AND product_id = $1", product.ID)
+	rows, err := database.SQL.Query("select id, product_id, image from product_images where deleted_at is null AND product_id = $1", product.ID)
 	if err != nil {
 		return
 	}
