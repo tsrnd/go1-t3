@@ -28,3 +28,11 @@ type LoginController struct {
 type UserController struct {
 	Render render
 }
+
+type CartController struct {
+	Render render
+}
+
+type ProductConroller struct {
+	Render render
+}

@@ -7,9 +7,9 @@ import (
 
 type User struct {
 	BaseModel
-	Name 	  string	`db:"name"`
-	Email     string	`db:"email"`
-	Password  string	`db:"password"`
+	Name     string `db:"name"`
+	Email    string `db:"email"`
+	Password string `db:"password"`
 }
 
 /**
@@ -38,12 +38,12 @@ func (user *User) FindByName(name string) (err error) {
 * Create user
 **/
 func (user *User) Create() (err error) {
-	statement := "insert into users (name, email) values ($1, $2) returning id"
+	statement := "insert into users (name, email, password) values ($1, $2, $3) returning id"
 	stmt, err := database.SQL.Prepare(statement)
 	if err != nil {
 		return
 	}
-	err = stmt.QueryRow(user.Name, user.Email).Scan(&user.ID)
+	err = stmt.QueryRow(user.Name, user.Email, user.Password).Scan(&user.ID)
 	return
 }
 
@@ -54,8 +54,8 @@ func (user *User) Create() (err error) {
 func (user *User) FindByEmail(email string) (err error) {
 
 	err = database.SQL.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
-		if err != nil {
-			return
+	if err != nil {
+		return
 	}
 	return err
 }

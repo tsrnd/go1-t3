@@ -15,14 +15,14 @@ import (
 *
 * return cart view
 **/
-func Cart(w http.ResponseWriter, r *http.Request) {
+func (this *CartController) Index(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
 	err := service.ProcessCartPage(w, r, v.Vars)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 	v.Name = "cart/index"
-	v.Render(w)
+	this.Render(w, v)
 }
 
 /**
@@ -30,7 +30,7 @@ func Cart(w http.ResponseWriter, r *http.Request) {
 *
 * return cart
 **/
-func AddToCart(w http.ResponseWriter, r *http.Request) {
+func (this *CartController) Store(w http.ResponseWriter, r *http.Request) {
 	productID, _ := strconv.Atoi(mux.Vars(r)["id"])
 	err := service.ProcessAddToCard(w, r, uint(productID))
 	if err == nil {
@@ -40,8 +40,10 @@ func AddToCart(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func DelCartProduct(w http.ResponseWriter, r *http.Request) {
+func (this *CartController) Destroy(w http.ResponseWriter, r *http.Request) {
 	productID, _ := strconv.Atoi(mux.Vars(r)["id"])
 	service.ProcessDelCartProduct(w, r, uint(productID))
 	http.Redirect(w, r, "/cart", http.StatusSeeOther)
 }
+
+var GetCartController = &CartController{Render: renderView}

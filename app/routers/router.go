@@ -23,9 +23,9 @@ func Routes() *mux.Router {
 	r.HandleFunc("/checkout", middlewares.Chain(controler.CheckoutPost, middlewares.LoginMiddleware())).Methods("POST")
 
 	// Cart
-	r.HandleFunc("/cart", controler.Cart).Methods("GET")
-	r.HandleFunc("/cart/{id:[0-9]+}", controler.AddToCart).Methods("GET")
-	r.HandleFunc("/cart/del/{id:[0-9]+}", controler.DelCartProduct).Methods("GET")
+	r.HandleFunc("/cart", controler.GetCartController.Index).Methods("GET")
+	r.HandleFunc("/cart/{id:[0-9]+}", controler.GetCartController.Store).Methods("GET")
+	r.HandleFunc("/cart/del/{id:[0-9]+}", controler.GetCartController.Destroy).Methods("GET")
 	return r
 }
 
