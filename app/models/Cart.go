@@ -30,24 +30,25 @@ func (cart *Cart) TotalPrice() uint {
 	}
 	return uint(sum + 20000)
 }
+
 /**
 *
 * Load CartProducts
 **/
 func (cart *Cart) LoadCartProducts() (err error) {
 	rows, err := database.SQL.Query("SELECT id, cart_id, product_id, quantity FROM cart_products WHERE deleted_at is null AND cart_id = $1", cart.ID)
-    if err != nil {
-        return
-    }
-    defer rows.Close()
-    for rows.Next() {
-		cartProduct:= CartProduct{}
-        err := rows.Scan(&cartProduct.ID, &cartProduct.CartID, &cartProduct.ProductID, &cartProduct.Quantity)
-        if err != nil {
-            return err
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		cartProduct := CartProduct{}
+		err := rows.Scan(&cartProduct.ID, &cartProduct.CartID, &cartProduct.ProductID, &cartProduct.Quantity)
+		if err != nil {
+			return err
 		}
 		cart.CartProducts = append(cart.CartProducts, cartProduct)
-    }
+	}
 	return
 }
 

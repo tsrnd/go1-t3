@@ -36,3 +36,7 @@ type CartController struct {
 type ProductController struct {
 	Render render
 }
+
+type CheckoutController struct {
+	Render render
+}

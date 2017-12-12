@@ -3,20 +3,21 @@ package models
 import (
 	"github.com/goweb3/app/shared/database"
 )
+
 type Order struct {
 	BaseModel
-	UserID uint			`db:"user_id"`
-	NameReceiver string	`db:"name_receiver"`
-	Address string		`db:"address"`
-	Status uint			`db:"status"`
-	OrderProducts []OrderProduct	
+	UserID        uint   `db:"user_id"`
+	NameReceiver  string `db:"name_receiver"`
+	Address       string `db:"address"`
+	Status        uint   `db:"status"`
+	OrderProducts []OrderProduct
 }
 
 /**
 *
 * Create order
 **/
-func(order *Order) Create() (err error) {
+func (order *Order) Create() (err error) {
 	statement := "insert into orders (user_id, name_receiver, address, status) values ($1, $2, $3, $4) returning id"
 	stmt, err := database.SQL.Prepare(statement)
 	if err != nil {
@@ -41,17 +42,17 @@ func (order *Order) FindById(id uint) (err error) {
 **/
 func (order *Order) LoadOrderProducts() (err error) {
 	rows, err := database.SQL.Query("select id, order_id, product_id, quantity from order_products where deleted_at is null AND order_id = $1", order.ID)
-    if err != nil {
-        return
-    }
-    defer rows.Close()
-    for rows.Next() {
-		orderProduct:= OrderProduct{}
-        err := rows.Scan(&orderProduct.ID, &orderProduct.OrderID, &orderProduct.Quantity)
-        if err != nil {
-            return err
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		orderProduct := OrderProduct{}
+		err := rows.Scan(&orderProduct.ID, &orderProduct.OrderID, &orderProduct.Quantity)
+		if err != nil {
+			return err
 		}
 		order.OrderProducts = append(order.OrderProducts, orderProduct)
-    }
+	}
 	return
 }
