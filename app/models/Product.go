@@ -76,3 +76,24 @@ func (product *Product) FindByListID(id uint) error {
 	// err = database.SQL.Where("id = ?", id).First(&product).Error
 	return err
 }
+
+/**
+*
+* Load ProductImages
+**/
+func (product *Product) LoadProductImage() (err error) {
+	rows, err := database.SQL.Query("select id, product_id, image form product_images where deleted_at is null AND product_id = $1", product.ID)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		productImage := ProductImage{}
+		err := rows.Scan(&productImage.ID, &productImage.ProductID, &productImage.Image)
+		if err != nil {
+			return err
+		}
+		product.ProductImages = append(product.ProductImages, productImage)
+	}
+	return
+}

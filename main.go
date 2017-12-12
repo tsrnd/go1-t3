@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"os"
 
+	// "github.com/goweb3/app/models"
+
 	route "github.com/goweb3/app/routers"
 	"github.com/goweb3/app/shared/database"
 	"github.com/goweb3/app/shared/jsonconfig"
@@ -29,7 +31,6 @@ func main() {
 	view.Configure(config.View)
 	view.LoadTemplates(config.Template.Root, config.Template.Children)
 	server.Run(route.HTTP(), config.Server)
-
 }
 
 // ParseJSON unmarshals bytes to structs
