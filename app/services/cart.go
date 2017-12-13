@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -13,14 +14,12 @@ import (
 *
 * Process add product to cart
 **/
-func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) error {
-	var err error
+func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) (err error) {
 	sess, _ := session.SessionStart(r, w)
 	userID, _ := strconv.Atoi(sess.Get("id"))
 	product := models.Product{}
 	err = product.FindByID(productID)
 	if err != nil {
-		flash.SetFlash(w, flash.Flash{"Product does not exist", flash.FlashError})
 		return err
 	}
 	cart := models.Cart{}
@@ -36,7 +35,6 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) er
 			return err
 		}
 	}
-	flash.SetFlash(w, flash.Flash{"Add success", flash.FlashSuccess})
 	return nil
 }
 
@@ -46,14 +44,11 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) er
 * return error
 **/
 func ProcessCreateCard(userID uint, productID uint, cart *models.Cart) (err error) {
-	var quantity uint = 1
-	*cart = models.Cart{
-		UserID: userID,
-	}
-	err = cart.Create()
+	err = cart.Create(userID)
+	err = cart.FindByUserID(userID)
 	cartProduct := models.CartProduct{}
-	ProcessCartProductData(uint(cart.ID), productID, quantity, &cartProduct)
-	err = cartProduct.Create()
+	var quantity uint = 1
+	err = cartProduct.Create(cart.ID, productID, quantity)
 	return
 }
 
@@ -62,34 +57,19 @@ func ProcessCreateCard(userID uint, productID uint, cart *models.Cart) (err erro
 *
 * return error
 **/
-func ProcessCheckExistCartProduct(cardID uint, productID uint) error {
-	var err error
+func ProcessCheckExistCartProduct(cartID uint, productID uint) (err error) {
 	cartProduct := models.CartProduct{}
 	var quantity uint = 1
-	err = cartProduct.FindByCartIDAndProductID(cardID, productID)
+	err = cartProduct.FindByCartIDAndProductID(cartID, productID)
 	if err != nil { // cart product not exist
-		ProcessCartProductData(cardID, productID, quantity, &cartProduct)
-		err = cartProduct.Create()
+		err = cartProduct.Create(cartID, productID, quantity)
 	} else { // cart product exist
 		quantity = cartProduct.Quantity
 		quantity++
 		cartProduct.Quantity = quantity
-		err = cartProduct.Update()
+		err = cartProduct.Update(quantity, cartID, productID)
 	}
 	return err
-}
-
-/**
-* Process cart product data
-*
-* return void
-**/
-func ProcessCartProductData(cardID uint, productID uint, quantity uint, cartProduct *models.CartProduct) {
-	*cartProduct = models.CartProduct{
-		CartID:    cardID,
-		ProductID: productID,
-		Quantity:  quantity,
-	}
 }
 
 /**
@@ -101,7 +81,7 @@ func ProcessGetCountCartProduct(userID uint) uint {
 	cart := models.Cart{}
 	cart.FindByUserID(userID)
 	cartProduct := models.CartProduct{}
-	cartProducts := cartProduct.FindByCartID(cart.ID)
+	cartProducts, _ := cartProduct.GetByCartID(cart.ID)
 	sum := 0
 	for _, v := range cartProducts {
 		sum += int(v.Quantity)
@@ -120,12 +100,12 @@ func ProcessCartPage(w http.ResponseWriter, r *http.Request, data map[string]int
 	cart := models.Cart{}
 	cart.FindByUserID(uint(userID))
 	cartProduct := models.CartProduct{}
-	cartProducts := cartProduct.GetByCartID(cart.ID)
+	cartProducts, _ := cartProduct.GetByCartID(cart.ID)
+	data["cartProducts"] = cartProducts
 	sum := 0
 	for _, v := range cartProducts {
 		sum += int(v.Quantity) * v.Product.Price
 	}
-	data["cartProducts"] = cartProducts
 	data["priceTotal"] = sum
 	return
 }
@@ -140,13 +120,16 @@ func ProcessDelCartProduct(w http.ResponseWriter, r *http.Request, productID uin
 	userID, _ := strconv.Atoi(sess.Get("id"))
 	cart := models.Cart{}
 	cart.FindByUserID(uint(userID))
+	fmt.Println("cart", cart)
 	cartProduct := models.CartProduct{}
 	err = cartProduct.FindByCartIDAndProductID(cart.ID, productID)
+	fmt.Println("cart product", cartProduct)
 	if err != nil {
 		flash.SetFlash(w, flash.Flash{"Cart Product does not exist", flash.FlashError})
 		return err
 	}
-	cartProduct.Delete()
+	cartProduct.Delete(cartProduct.ID)
 	flash.SetFlash(w, flash.Flash{"Delete success", flash.FlashSuccess})
+	fmt.Println(err)
 	return
 }

@@ -1,8 +1,8 @@
 package models
 
-import (
-	// "github.com/goweb3/app/shared/database"
-)
+import "github.com/goweb3/app/shared/database"
+
+// "github.com/goweb3/app/shared/database"
 
 type Product struct {
 	BaseModel
@@ -25,9 +25,8 @@ func (product *Product) GetTopProducts() (products []Product, err error) {
 /**
 *	Find product by product id
 **/
-func (product *Product) FindByID(id uint) error {
-	var err error
-	// err = database.SQL.Where("id = ?", id).First(&product).Error
+func (product *Product) FindByID(ID uint) (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE deleted_at is null AND id = $1", ID).Scan(&product.ID, &product.Name, &product.Description, &product.Quantity, &product.Price)
 	return err
 }
 

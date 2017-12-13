@@ -1,8 +1,8 @@
 package models
 
-import (
-	// "github.com/goweb3/app/shared/database"
-)
+import "github.com/goweb3/app/shared/database"
+
+// "github.com/goweb3/app/shared/database"
 
 type Cart struct {
 	BaseModel
@@ -14,8 +14,8 @@ type Cart struct {
 *
 * Create cart
 **/
-func (cart *Cart) Create() (err error) {
-	// err = database.SQL.Create(&cart).Error
+func (cart *Cart) Create(userID uint) (err error) {
+	_, err = database.SQL.Exec("INSERT INTO carts (user_id) values ($1) returning id", userID)
 	return
 }
 
@@ -45,6 +45,6 @@ func (cart *Cart) Delete() (err error) {
 * Find cart by user id
 **/
 func (cart *Cart) FindByUserID(userID uint) (err error) {
-	// err = database.SQL.Where("user_id = ?", userID).First(&cart).Error
+	err = database.SQL.QueryRow("SELECT id, user_id FROM carts WHERE user_id = $1", userID).Scan(&cart.ID, &cart.UserID)
 	return err
 }
