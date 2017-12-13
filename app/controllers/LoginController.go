@@ -36,7 +36,7 @@ func (l *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		http.Redirect(w, r, "/", 302)
 	} else {
-		http.Redirect(w, r, "/login", 303)
+		http.Redirect(w, r, "/login", http.StatusFound)
 	}
 }
 
