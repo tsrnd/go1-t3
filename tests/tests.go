@@ -20,7 +20,7 @@ type configuration struct {
 	Server   server.Server `json:"Server"`
 }
 
-func init() {
+func Init() {
 	// Load the configuration file
 	jsonconfig.Load("config"+string(os.PathSeparator)+"config.json", config)
 	database.Connect(config.Database)
