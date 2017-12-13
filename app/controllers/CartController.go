@@ -43,6 +43,7 @@ func AddToCart(w http.ResponseWriter, r *http.Request) {
 }
 
 /**
+*
 * Delete cart
 **/
 func DelCartProduct(w http.ResponseWriter, r *http.Request) {
