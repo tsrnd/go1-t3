@@ -14,8 +14,14 @@ type Cart struct {
 *
 * Create cart
 **/
-func (cart *Cart) Create(userID uint) (err error) {
-	_, err = database.SQL.Exec("INSERT INTO carts (user_id) values ($1) returning id", userID)
+func (cart *Cart) Create() (err error) {
+	statement := "INSERT INTO carts (user_id) values ($1) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(cart.UserID).Scan(&cart.ID)
 	return
 }
 

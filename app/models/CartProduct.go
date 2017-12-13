@@ -42,8 +42,14 @@ func (cartProduct *CartProduct) Delete(cartProductID uint) (err error) {
 *
 * Create cart product
 **/
-func (cartProduct *CartProduct) Create(cartID uint, productID uint, quantity uint) (err error) {
-	_, err = database.SQL.Exec("INSERT INTO cart_products (cart_id, product_id, quantity) values ($1, $2, $3) returning id", cartID, productID, quantity)
+func (cartProduct *CartProduct) Create() (err error) {
+	statement := "INSERT INTO cart_products (cart_id, product_id, quantity) values ($1, $2, $3) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(cartProduct.CartID, cartProduct.ProductID, cartProduct.Quantity).Scan(&cartProduct.ID)
 	return
 }
 
