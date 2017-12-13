@@ -25,9 +25,8 @@ func (product *Product) GetTopProducts() (products []Product, err error) {
 /**
 *	Find product by product id
 **/
-func (product *Product) FindByID(id uint) error {
-	var err error
-	// err = database.SQL.Where("id = ?", id).First(&product).Error
+func (product *Product) FindByID(ID uint) (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE deleted_at is null AND id = $1", ID).Scan(&product.ID, &product.Name, &product.Description, &product.Quantity, &product.Price)
 	return err
 }
 
@@ -46,17 +45,17 @@ func (product *Product) FindByListID(id uint) error {
 **/
 func (product *Product) LoadProductImage() (err error) {
 	rows, err := database.SQL.Query("select id, product_id, image form product_images where deleted_at is null AND product_id = $1", product.ID)
-    if err != nil {
-        return
-    }
-    defer rows.Close()
-    for rows.Next() {
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
 		productImage := ProductImage{}
-        err := rows.Scan(&productImage.ID, &productImage.ProductID, &productImage.Image)
-        if err != nil {
-            return err
+		err := rows.Scan(&productImage.ID, &productImage.ProductID, &productImage.Image)
+		if err != nil {
+			return err
 		}
 		product.ProductImages = append(product.ProductImages, productImage)
-    }
+	}
 	return
 }

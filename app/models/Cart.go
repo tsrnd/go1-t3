@@ -15,7 +15,13 @@ type Cart struct {
 * Create cart
 **/
 func (cart *Cart) Create() (err error) {
-	// err = database.SQL.Create(&cart).Error
+	statement := "INSERT INTO carts (user_id) values ($1) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(cart.UserID).Scan(&cart.ID)
 	return
 }
 
@@ -30,24 +36,25 @@ func (cart *Cart) TotalPrice() uint {
 	}
 	return uint(sum + 20000)
 }
+
 /**
 *
 * Load CartProducts
 **/
 func (cart *Cart) LoadCartProducts() (err error) {
 	rows, err := database.SQL.Query("SELECT id, cart_id, product_id, quantity FROM cart_products WHERE deleted_at is null AND cart_id = $1", cart.ID)
-    if err != nil {
-        return
-    }
-    defer rows.Close()
-    for rows.Next() {
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
 		cartProduct := CartProduct{}
-        err := rows.Scan(&cartProduct.ID, &cartProduct.CartID, &cartProduct.ProductID, &cartProduct.Quantity)
-        if err != nil {
-            return err
+		err := rows.Scan(&cartProduct.ID, &cartProduct.CartID, &cartProduct.ProductID, &cartProduct.Quantity)
+		if err != nil {
+			return err
 		}
 		cart.CartProducts = append(cart.CartProducts, cartProduct)
-    }
+	}
 	return
 }
 
