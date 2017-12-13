@@ -29,7 +29,7 @@ func (user *User) HashPassword() error {
 * Find user by name
 **/
 func (user *User) FindByName(name string) (err error) {
-	err = database.SQL.QueryRow("SELECT id, name, email FROM users WHERE name = $1", name).Scan(&user.ID, &user.Name, &user.Email)
+	err = database.SQL.QueryRow("SELECT id, name, email FROM users WHERE deleted_at is null AND name = $1", name).Scan(&user.ID, &user.Name, &user.Email)
 	return
 }
 
@@ -52,10 +52,6 @@ func (user *User) Create() (err error) {
 * Find user by Email
 **/
 func (user *User) FindByEmail(email string) (err error) {
-
-	err = database.SQL.QueryRow("SELECT id, name, email, password FROM users WHERE email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
-		if err != nil {
-			return
-	}
+	err = database.SQL.QueryRow("SELECT id, name, email, password FROM users WHERE deleted_at is null AND email = $1", email).Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	return err
 }

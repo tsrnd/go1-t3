@@ -1,7 +1,7 @@
 package models
 
 import (
-	// "github.com/goweb3/app/shared/database"
+	"github.com/goweb3/app/shared/database"
 )
 type Payment struct {
 	BaseModel
@@ -15,7 +15,12 @@ type Payment struct {
 * Create payment
 **/
 func(payment *Payment) Create() (err error) {
-	// err = database.SQL.Create(&payment).Error
+	statement := "insert into payments (order_id, account_number, bank) values ($1, $2, $3) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	err = stmt.QueryRow(payment.OrderID, payment.AccountNumber, payment.Bank).Scan(&payment.ID)
 	return
 }
 
@@ -24,6 +29,6 @@ func(payment *Payment) Create() (err error) {
 * Find payment by order_id
 **/
 func (payment *Payment) FindByOrderId(orderId uint) (err error) {
-	// err = database.SQL.Where("order_id = ?", orderId).First(&payment).Error
+	err = database.SQL.QueryRow("SELECT id, order_id, account_number, bank FROM payments WHERE deleted_at is null AND order_id = $1", orderId).Scan(&payment.ID, &payment.OrderID, &payment.AccountNumber, &payment.Bank)
 	return err
 }

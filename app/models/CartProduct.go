@@ -1,9 +1,8 @@
 package models
 
-import "github.com/goweb3/app/shared/database"
-import "fmt"
-
-// "github.com/goweb3/app/shared/database"
+import (
+	"github.com/goweb3/app/shared/database"
+)
 
 type CartProduct struct {
 	BaseModel
@@ -23,11 +22,19 @@ func (cartProduct *CartProduct) PriceFollowQuantity() uint {
 
 /**
 *
+* Load Product
+**/
+func (cartProduct *CartProduct) LoadProducts() (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE deleted_at is null AND id = $1", cartProduct.ProductID).Scan(&cartProduct.Product.ID, &cartProduct.Product.Name, &cartProduct.Product.Description, &cartProduct.Product.Quantity, &cartProduct.Product.Price)
+	return
+}
+
+/**
+*
 * Delete cart product
 **/
 func (cartProduct *CartProduct) Delete(cartProductID uint) (err error) {
 	_, err = database.SQL.Exec("DELETE FROM cart_products WHERE id = $1", cartProductID)
-	fmt.Println(err)
 	return err
 }
 
@@ -92,7 +99,7 @@ func (cartProduct *CartProduct) GetByCartID(cartID uint) (cartProducts []CartPro
 
 /**
 *
-* Loads product
+* Load product
 **/
 func (cartProduct *CartProduct) LoadProduct(productID uint) (err error) {
 	product := Product{}

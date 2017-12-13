@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -20,6 +19,7 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) (e
 	product := models.Product{}
 	err = product.FindByID(productID)
 	if err != nil {
+		flash.SetFlash(w, flash.Flash{"Product does not exist", flash.FlashError})
 		return err
 	}
 	cart := models.Cart{}
@@ -35,6 +35,7 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) (e
 			return err
 		}
 	}
+	flash.SetFlash(w, flash.Flash{"Add success", flash.FlashSuccess})
 	return nil
 }
 
@@ -120,16 +121,13 @@ func ProcessDelCartProduct(w http.ResponseWriter, r *http.Request, productID uin
 	userID, _ := strconv.Atoi(sess.Get("id"))
 	cart := models.Cart{}
 	cart.FindByUserID(uint(userID))
-	fmt.Println("cart", cart)
 	cartProduct := models.CartProduct{}
 	err = cartProduct.FindByCartIDAndProductID(cart.ID, productID)
-	fmt.Println("cart product", cartProduct)
 	if err != nil {
 		flash.SetFlash(w, flash.Flash{"Cart Product does not exist", flash.FlashError})
 		return err
 	}
 	cartProduct.Delete(cartProduct.ID)
 	flash.SetFlash(w, flash.Flash{"Delete success", flash.FlashSuccess})
-	fmt.Println(err)
 	return
 }
