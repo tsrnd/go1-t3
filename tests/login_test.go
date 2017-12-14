@@ -35,6 +35,9 @@ func TestLoginSuccess(t *testing.T) {
 	loginController := &controller.LoginController{Render: render}
 	handler := http.HandlerFunc(loginController.Login)
 	handler.ServeHTTP(rr, req)
+	if rr.Header()["Location"][0] != "/" {
+		t.Errorf("Redirect failed for successful login!")
+	}
 	if status := rr.Code; status != 302 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 302)
@@ -52,6 +55,10 @@ func TestLoginFailUserName(t *testing.T) {
 	loginController := &controller.LoginController{Render: render}
 	handler := http.HandlerFunc(loginController.Login)
 	handler.ServeHTTP(rr, req)
+	
+	if rr.Header()["Location"][0] != "/login" {
+		t.Errorf("Redirect failed for login!")
+	}
 	if status := rr.Code; status != 303 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 303)
@@ -69,6 +76,9 @@ func TestLoginFailPassword(t *testing.T) {
 	loginController := &controller.LoginController{Render: render}
 	handler := http.HandlerFunc(loginController.Login)
 	handler.ServeHTTP(rr, req)
+	if rr.Header()["Location"][0] != "/login" {
+		t.Errorf("Redirect failed for login!")
+	}
 	if status := rr.Code; status != 303 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 303)
@@ -86,6 +96,9 @@ func TestLoginFailUserNameAndPassword(t *testing.T) {
 	loginController := &controller.LoginController{Render: render}
 	handler := http.HandlerFunc(loginController.Login)
 	handler.ServeHTTP(rr, req)
+	if rr.Header()["Location"][0] != "/login" {
+		t.Errorf("Redirect failed for login!")
+	}
 	if status := rr.Code; status != 303 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 303)
