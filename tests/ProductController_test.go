@@ -26,7 +26,6 @@ func TestProductController_ShowSuccess(t *testing.T) {
 	productController := &controller.ProductController{Render: render}
 	handler := http.HandlerFunc(productController.Show)
 	handler.ServeHTTP(rr, req)
-	fmt.Println(productController)
 	if status := rr.Code; status != 200 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 200)
@@ -42,7 +41,6 @@ func TestProductController_ShowFailed(t *testing.T) {
 	productController := &controller.ProductController{Render: render}
 	handler := http.HandlerFunc(productController.Show)
 	handler.ServeHTTP(rr, req)
-	fmt.Println(productController)
 	if status := rr.Code; status != 404 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 404)
