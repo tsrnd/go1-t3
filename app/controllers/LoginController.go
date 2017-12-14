@@ -34,9 +34,9 @@ func (l *LoginController) Login(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	err := service.Auth(w, r)
 	if err == nil {
-		http.Redirect(w, r, "/", 302)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	} else {
-		http.Redirect(w, r, "/login", 303)
+		http.Redirect(w, r, "/login", http.StatusFound)
 	}
 }
 
