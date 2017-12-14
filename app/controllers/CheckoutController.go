@@ -9,7 +9,11 @@ import "github.com/jianfengye/web-golang/web/session"
 import "github.com/goweb3/app/shared/cookie"
 import service "github.com/goweb3/app/services"
 
-func Checkout(w http.ResponseWriter, r *http.Request) {
+type CheckoutController struct {
+	Render render
+}
+
+func (this *CheckoutController) Index(w http.ResponseWriter, r *http.Request) {
 	sess, _ := session.SessionStart(r, w)
 
 	userId, _ := strconv.ParseUint(sess.Get("id"), 10, 32)
@@ -36,12 +40,14 @@ func Checkout(w http.ResponseWriter, r *http.Request) {
 	v.Render(w)
 }
 
-func CheckoutPost(w http.ResponseWriter, r *http.Request) {
+func (this *CheckoutController) Store(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	if err := service.CheckoutOrder(w, r); err != nil {
-		cookie.SetMessage(w, "Order failed!", "ErrorCheckout")		
+		cookie.SetMessage(w, "Order failed!", "ErrorCheckout")
 	} else {
 		cookie.SetMessage(w, "Order successful! Thank you!", "SuccessCheckout")
 	}
-	http.Redirect(w, r, "/checkout", http.StatusSeeOther)	
+	http.Redirect(w, r, "/checkout", http.StatusSeeOther)
 }
+
+var GetCheckoutController = &CheckoutController{Render: renderView}

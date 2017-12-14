@@ -43,7 +43,11 @@
                                 {{ range .cart.CartProducts}}
                                 <div class="form-group">
                                     <div class="col-sm-3 col-xs-3">
-                                        <img class="img-responsive" src="//c1.staticflickr.com/1/466/19681864394_c332ae87df_t.jpg" />
+                                        {{ if .Product.ProductImages}}
+                                            <img class="img-responsive" src="/assets/images/products/{{(index .Product.ProductImages 0).Image}}" />                                        
+                                        {{else}}
+                                            <img class="img-responsive" src="//c1.staticflickr.com/1/466/19681864394_c332ae87df_t.jpg" />                                        
+                                        {{end}}
                                     </div>
                                     <div class="col-sm-6 col-xs-6">
                                         <div class="col-xs-12">{{.Product.Name}}</div>

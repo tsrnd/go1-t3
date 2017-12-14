@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/goweb3/app/shared/database"
 )
 
@@ -11,6 +13,42 @@ type Product struct {
 	Quantity      int    `db:"quantity"`
 	Price         int    `db:"price"`
 	ProductImages []ProductImage
+}
+
+func (this *Product) Create() (err error) {
+	statement := "insert into products (name, description, quantity, price, created_at, updated_at) values ($1, $2, $3, $4, $5, $6) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(this.Name, this.Description, this.Quantity, this.Price, time.Now(), time.Now()).Scan(&this.ID)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (this *Product) GetAll() (products []Product, err error) {
+	statement := "select Id, name, description, quantity, price, created_at, updated_at from products where deleted_at is null"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	rows, err := stmt.Query()
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	for rows.Next() {
+		product := Product{}
+		err := rows.Scan(&product.ID, &product.Name, &product.Description, &product.Quantity, &product.Price, &product.CreatedAt, &product.UpdatedAt)
+		if err != nil {
+			return products, err
+		}
+		products = append(products, product)
+	}
+	return
 }
 
 /**
