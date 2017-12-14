@@ -29,14 +29,16 @@ func ValidateRegisterFormMiddleware() Middleware {
 				message := make(map[string] string)
 				if (err != nil) {	
 					message = validations.CustomErrorMessage(err)
-					user := models.User{}
-					err := user.FindByEmail(email)
-					if  err == nil {
-						message["EmailEXIST"] = "Email already exists"
-					}
-					for key, val := range message {
-						cookie.SetMessage(w, val, "Register"+key)
-					}
+				}
+				user := models.User{}
+				err = user.FindByEmail(email)
+				if  err == nil {
+					message["EmailEXIST"] = "Email already exists"
+				}
+				for key, val := range message {
+					cookie.SetMessage(w, val, "Register"+key)
+				}
+				if len(message) != 0 {
 					http.Redirect(w, r, "/login", http.StatusFound)
 					return					
 				}
