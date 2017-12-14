@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	service "github.com/goweb3/app/services"
 	"github.com/goweb3/app/shared/view"
@@ -21,6 +22,7 @@ type CartController struct {
 **/
 func (this *CartController) Index(w http.ResponseWriter, r *http.Request) {
 	v := view.New(r)
+	v.Vars[csrf.TemplateTag] = csrf.TemplateField(r)
 	err := service.ProcessCartPage(w, r, v.Vars)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -44,6 +46,10 @@ func (this *CartController) Store(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/**
+*
+* Delete cart
+**/
 func (this *CartController) Destroy(w http.ResponseWriter, r *http.Request) {
 	productID, _ := strconv.Atoi(mux.Vars(r)["id"])
 	service.ProcessDelCartProduct(w, r, uint(productID))

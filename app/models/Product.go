@@ -63,9 +63,9 @@ func (product *Product) GetTopProducts() (products []Product, err error) {
 /**
 *	Find product by product id
 **/
-func (this *Product) FindByID(id uint) (err error) {
-	err = database.SQL.QueryRow("select id, name, description, quantity, price, created_at, updated_at from products where id = $1 and deleted_at is null", id).Scan(&this.ID, &this.Name, &this.Description, &this.Quantity, &this.Price, &this.CreatedAt, &this.UpdatedAt)
-	return
+func (product *Product) FindByID(ID uint) (err error) {
+	err = database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE deleted_at is null AND id = $1", ID).Scan(&product.ID, &product.Name, &product.Description, &product.Quantity, &product.Price)
+	return err
 }
 
 /**
@@ -82,7 +82,7 @@ func (product *Product) FindByListID(id uint) error {
 * Load ProductImages
 **/
 func (product *Product) LoadProductImage() (err error) {
-	rows, err := database.SQL.Query("select id, product_id, image from product_images where deleted_at is null AND product_id = $1", product.ID)
+	rows, err := database.SQL.Query("select id, product_id, image form product_images where deleted_at is null AND product_id = $1", product.ID)
 	if err != nil {
 		return
 	}

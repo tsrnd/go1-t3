@@ -13,8 +13,7 @@ import (
 *
 * Process add product to cart
 **/
-func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) error {
-	var err error
+func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) (err error) {
 	sess, _ := session.SessionStart(r, w)
 	userID, _ := strconv.Atoi(sess.Get("id"))
 	product := models.Product{}
@@ -26,7 +25,7 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) er
 	cart := models.Cart{}
 	err = cart.FindByUserID(uint(userID))
 	if err != nil { // cart not exist
-		err = ProcessCreateCard(uint(userID), product.ID, &cart)
+		err = ProcessCreateCart(uint(userID), product.ID, &cart)
 		if err != nil {
 			return err
 		}
@@ -45,15 +44,10 @@ func ProcessAddToCard(w http.ResponseWriter, r *http.Request, productID uint) er
 *
 * return error
 **/
-func ProcessCreateCard(userID uint, productID uint, cart *models.Cart) (err error) {
-	var quantity uint = 1
-	*cart = models.Cart{
-		UserID: userID,
-	}
+func ProcessCreateCart(userID uint, productID uint, cart *models.Cart) (err error) {
+	cart.UserID = userID
 	err = cart.Create()
-	cartProduct := models.CartProduct{}
-	ProcessCartProductData(uint(cart.ID), productID, quantity, &cartProduct)
-	err = cartProduct.Create()
+	err = ProcessCreateCartProduct(cart.ID, productID)
 	return
 }
 
@@ -62,34 +56,29 @@ func ProcessCreateCard(userID uint, productID uint, cart *models.Cart) (err erro
 *
 * return error
 **/
-func ProcessCheckExistCartProduct(cardID uint, productID uint) error {
-	var err error
+func ProcessCheckExistCartProduct(cartID uint, productID uint) (err error) {
 	cartProduct := models.CartProduct{}
-	var quantity uint = 1
-	err = cartProduct.FindByCartIDAndProductID(cardID, productID)
+	err = cartProduct.FindByCartIDAndProductID(cartID, productID)
 	if err != nil { // cart product not exist
-		ProcessCartProductData(cardID, productID, quantity, &cartProduct)
-		err = cartProduct.Create()
+		err = ProcessCreateCartProduct(cartID, productID)
 	} else { // cart product exist
-		quantity = cartProduct.Quantity
-		quantity++
-		cartProduct.Quantity = quantity
-		err = cartProduct.Update()
+		cartProduct.Quantity++
+		err = cartProduct.Update(cartProduct.Quantity, cartID, productID)
 	}
 	return err
 }
 
 /**
-* Process cart product data
 *
-* return void
+* Process create cart product
 **/
-func ProcessCartProductData(cardID uint, productID uint, quantity uint, cartProduct *models.CartProduct) {
-	*cartProduct = models.CartProduct{
-		CartID:    cardID,
-		ProductID: productID,
-		Quantity:  quantity,
-	}
+func ProcessCreateCartProduct(cartID uint, productID uint) (err error) {
+	cartProduct := models.CartProduct{}
+	cartProduct.CartID = cartID
+	cartProduct.ProductID = productID
+	cartProduct.Quantity = uint(1)
+	err = cartProduct.Create()
+	return
 }
 
 /**
@@ -101,7 +90,7 @@ func ProcessGetCountCartProduct(userID uint) uint {
 	cart := models.Cart{}
 	cart.FindByUserID(userID)
 	cartProduct := models.CartProduct{}
-	cartProducts := cartProduct.FindByCartID(cart.ID)
+	cartProducts, _ := cartProduct.GetByCartID(cart.ID)
 	sum := 0
 	for _, v := range cartProducts {
 		sum += int(v.Quantity)
@@ -120,12 +109,12 @@ func ProcessCartPage(w http.ResponseWriter, r *http.Request, data map[string]int
 	cart := models.Cart{}
 	cart.FindByUserID(uint(userID))
 	cartProduct := models.CartProduct{}
-	cartProducts := cartProduct.GetByCartID(cart.ID)
+	cartProducts, _ := cartProduct.GetByCartID(cart.ID)
+	data["cartProducts"] = cartProducts
 	sum := 0
 	for _, v := range cartProducts {
 		sum += int(v.Quantity) * v.Product.Price
 	}
-	data["cartProducts"] = cartProducts
 	data["priceTotal"] = sum
 	return
 }
@@ -146,7 +135,7 @@ func ProcessDelCartProduct(w http.ResponseWriter, r *http.Request, productID uin
 		flash.SetFlash(w, flash.Flash{"Cart Product does not exist", flash.FlashError})
 		return err
 	}
-	cartProduct.Delete()
+	cartProduct.Delete(cartProduct.ID)
 	flash.SetFlash(w, flash.Flash{"Delete success", flash.FlashSuccess})
 	return
 }

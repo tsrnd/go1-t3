@@ -6,9 +6,9 @@ import (
 
 type CartProduct struct {
 	BaseModel
-	CartID    uint    `db:"cart_id"`
-	ProductID uint    `db:"product_id"`
-	Quantity  uint    `db:"quantity"`
+	CartID    uint `db:"cart_id"`
+	ProductID uint `db:"product_id"`
+	Quantity  uint `db:"quantity"`
 	Product   Product
 }
 
@@ -31,10 +31,10 @@ func (cartProduct *CartProduct) LoadProducts() (err error) {
 
 /**
 *
-* Delete
+* Delete cart product
 **/
-func (cartProduct *CartProduct) Delete() (err error) {
-	// err := database.SQL.Delete(&cartProduct).Error
+func (cartProduct *CartProduct) Delete(cartProductID uint) (err error) {
+	_, err = database.SQL.Exec("DELETE FROM cart_products WHERE id = $1", cartProductID)
 	return err
 }
 
@@ -43,7 +43,13 @@ func (cartProduct *CartProduct) Delete() (err error) {
 * Create cart product
 **/
 func (cartProduct *CartProduct) Create() (err error) {
-	// err = database.SQL.Create(&cartProduct).Error
+	statement := "INSERT INTO cart_products (cart_id, product_id, quantity) values ($1, $2, $3) returning id"
+	stmt, err := database.SQL.Prepare(statement)
+	if err != nil {
+		return
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(cartProduct.CartID, cartProduct.ProductID, cartProduct.Quantity).Scan(&cartProduct.ID)
 	return
 }
 
@@ -51,8 +57,8 @@ func (cartProduct *CartProduct) Create() (err error) {
 *
 * Update cart product
 **/
-func (cartProduct *CartProduct) Update() (err error) {
-	// database.SQL.Save(cartProduct)
+func (cartProduct *CartProduct) Update(quantity uint, cartID uint, productID uint) (err error) {
+	_, err = database.SQL.Exec("UPDATE cart_products SET quantity = $1 WHERE cart_id = $2 AND product_id = $3", quantity, cartID, productID)
 	return
 }
 
@@ -61,7 +67,8 @@ func (cartProduct *CartProduct) Update() (err error) {
 * Find cart product by cart id and product id
 **/
 func (cartProduct *CartProduct) FindByCartIDAndProductID(cartID uint, productID uint) (err error) {
-	// err = database.SQL.Where("cart_id = ? AND product_id =?", cartID, productID).First(&cartProduct).Error
+	row := database.SQL.QueryRow("SELECT id, cart_id, product_id, quantity FROM cart_products WHERE deleted_at is null AND cart_id = $1 AND product_id = $2", cartID, productID)
+	err = row.Scan(&cartProduct.ID, &cartProduct.CartID, &cartProduct.ProductID, &cartProduct.Quantity)
 	return err
 }
 
@@ -78,7 +85,35 @@ func (cartProduct *CartProduct) FindByCartID(cartID uint) (cartProducts []CartPr
 *
 * Get all cart products by cart id
 **/
-func (cartProduct *CartProduct) GetByCartID(cartID uint) (cartProducts []CartProduct) {
-	// database.SQL.Preload("Product").Where("cart_id = ?", cartID).Find(&cartProducts)
+func (cartProduct *CartProduct) GetByCartID(cartID uint) (cartProducts []CartProduct, err error) {
+	rows, err := database.SQL.Query("SELECT id, cart_id, product_id, quantity FROM cart_products WHERE deleted_at is null AND cart_id = $1", cartID)
+	if err != nil {
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		cartProduct := CartProduct{}
+		err := rows.Scan(&cartProduct.ID, &cartProduct.CartID, &cartProduct.ProductID, &cartProduct.Quantity)
+		if err != nil {
+			return nil, err
+		}
+		cartProduct.LoadProduct(cartProduct.ProductID)
+		cartProducts = append(cartProducts, cartProduct)
+	}
+	return
+}
+
+/**
+*
+* Load product
+**/
+func (cartProduct *CartProduct) LoadProduct(productID uint) (err error) {
+	product := Product{}
+	rows := database.SQL.QueryRow("SELECT id, name, description, quantity, price FROM products WHERE deleted_at is null AND id = $1", productID)
+	err = rows.Scan(&product.ID, &product.Name, &product.Description, &product.Quantity, &product.Price)
+	if err != nil {
+		return err
+	}
+	cartProduct.Product = product
 	return
 }
