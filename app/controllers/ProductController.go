@@ -30,7 +30,11 @@ func (this *ProductController) Show(w http.ResponseWriter, r *http.Request) {
 	product_id, _ := strconv.Atoi(mux.Vars(r)["id"])
 	v := view.New(r)
 	product := &models.Product{}
-	product.FindByID(uint(product_id))
+	err := product.FindByID(uint(product_id))
+	if err != nil {
+		Error404(w, r)
+		return
+	}
 	product.LoadProductImage()
 	data := &dto.DataTransferProduct{
 		Id:         product.ID,

@@ -13,13 +13,13 @@ func init() {
 	Init()
 }
 
-func makeRequestProductDetail() (req *http.Request, err error) {
-	req, err = http.NewRequest("GET", "/products/1", nil)
+func makeRequestProductDetail(id uint) (req *http.Request, err error) {
+	req, err = http.NewRequest("GET", "/products/"+string(id), nil)
 	return
 }
-func TestProductController_Show(t *testing.T) {
+func TestProductController_ShowSuccess(t *testing.T) {
 	rr := httptest.NewRecorder()
-	req, err := makeRequestProductDetail()
+	req, err := makeRequestProductDetail(1)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -30,5 +30,21 @@ func TestProductController_Show(t *testing.T) {
 	if status := rr.Code; status != 200 {
 		t.Errorf("handler returned wrong status code: got %v want %v",
 			status, 200)
+	}
+}
+
+func TestProductController_ShowFailed(t *testing.T) {
+	rr := httptest.NewRecorder()
+	req, err := makeRequestProductDetail(1000)
+	if err != nil {
+		t.Fatal(err)
+	}
+	productController := &controller.ProductController{Render: render}
+	handler := http.HandlerFunc(productController.Show)
+	handler.ServeHTTP(rr, req)
+	fmt.Println(productController)
+	if status := rr.Code; status != 404 {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, 404)
 	}
 }
