@@ -1,2 +1,4 @@
 config/config.json
 .vscode
+vendor/*
+*.DS_Store
