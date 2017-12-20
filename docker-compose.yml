@@ -1,0 +1,22 @@
+version: '3'
+services: 
+
+    db:
+        image: postgres:latest
+        ports:
+            - "5432:5432" # host:container
+        volumes:
+        - ./.DB/data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_DBNAME=postgres    
+            - POSTGRES_PASSWORD=mypass
+            - POSTGRES_PORT=5432
+        container_name: db-cont
+
+    redis:
+        image: redis:alpine
+        ports: 
+            - "6379:6379"
+        container_name: kvs-cont
+        

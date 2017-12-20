@@ -1,0 +1,29 @@
+{
+   "multipart":{
+      "maxmemory": 1073741824
+   },
+   "api":{
+      "visenze":{
+         "accesskey":"65c5090022e650e883d097ff89796984",
+         "secretkey":"13f36dd41e44625dc2a45c3ddca9babf"
+      }
+   },
+   "database":{
+      "dbms":"postgres",
+      "host":"127.0.0.1",
+      "user":"postgres",
+      "pass":"mypass",
+      "name":"sample",
+      "port":"5432"
+   },
+   "redis":{
+      "host":"127.0.0.1",
+      "port":"6379",
+      "pass":""
+   },
+   "logger":{
+      "output": "output",
+      "file": "/var/log/fr-circle-api/app.log",
+      "level": "debug"
+   }
+}

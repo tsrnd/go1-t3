@@ -1,38 +1,48 @@
 package main
 
 import (
-	"encoding/json"
+	"net/http"
+
 	"os"
 
-	route "github.com/goweb3/app/routers"
-	"github.com/goweb3/app/shared/database"
-	"github.com/goweb3/app/shared/jsonconfig"
-	"github.com/goweb3/app/shared/server"
-	"github.com/goweb3/app/shared/view"
+	"github.com/garyburd/redigo/redis"
+	"github.com/go-chi/chi"
+	"github.com/monstar-lab/fr-circle-api/infrastructure"
 )
 
-var config = &configuration{}
-
-// configuration contains the application settings
-type configuration struct {
-	Database database.Info `json:"Database"`
-	Template view.Template `json:"Template"`
-	View     view.View     `json:"View"`
-	Server   server.Server `json:"Server"`
-}
-
 func main() {
-	// Load the configuration file
-	jsonconfig.Load("config"+string(os.PathSeparator)+"config.json", config)
-	database.Connect(config.Database)
-	// Setup the views
-	view.Configure(config.View)
-	view.LoadTemplates(config.Template.Root, config.Template.Children)
-	server.Run(route.HTTP(), config.Server)
+	mux := chi.NewRouter()
+	// sql new.
+	sqlHandler := infrastructure.NewSQLHandler()
+	// cache new.
+	cacheHandler := infrastructure.NewCacheHandler()
+	// logger new.
+	loggerHandler := infrastructure.NewLoggerHandler()
+	// translation new.
+	translationHandler := infrastructure.NewTranslationHandler()
 
+	r := &Router{mux: mux, sqlHandler: sqlHandler, cacheHandler: cacheHandler, loggerHandler: loggerHandler, translationHandler: translationHandler}
+
+	r.InitializeRouter()
+	r.SetupHandler()
+
+	// after process
+	defer closeLogger(r.loggerHandler.Logfile)
+	defer closeRedis(r.cacheHandler.Conn)
+
+	http.ListenAndServe(":8080", mux)
 }
 
-// ParseJSON unmarshals bytes to structs
-func (c *configuration) ParseJSON(b []byte) error {
-	return json.Unmarshal(b, &c)
+// after process
+func closeLogger(logfile *os.File) {
+	// close file.
+	if logfile != nil {
+		logfile.Close()
+	}
+}
+func closeRedis(conn *redis.Conn) {
+	// close redis connection.
+	if conn != nil {
+		(*conn).Close()
+	}
 }

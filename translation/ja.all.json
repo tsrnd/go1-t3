@@ -1,0 +1,18 @@
+[
+  {
+    "id": "error",
+    "translation": "{{.Function}} エラーです。"
+  },
+  {
+    "id": "success",
+    "translation": "成功しました。"
+  },
+  {
+    "id": "add",
+    "translation": "{{.Title}}を{{.RowAffected}}件追加しました。"
+  },
+  {
+    "id": "delete",
+    "translation": "{{.Title}}を{{.RowAffected}}件削除しました。"
+  }
+]
