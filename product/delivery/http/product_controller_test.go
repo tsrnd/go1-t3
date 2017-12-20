@@ -19,10 +19,7 @@ func TestGetByID(t *testing.T) {
   c.SetParamNames("id")
   c.SetParamValues(strconv.Itoa(mockID))
 
-  handler:= productHttp.ProductHandler{
-            AUsecase: mockUCase,
-            Helper: httpHelper.HttpHelper{}
-  }
+  handler:= productHttp.ProductHandler{AUsecase: mockUCase,Helper: httpHelper.HttpHelper{}}
   handler.GetByID(c)
 
   assert.Equal(t, http.StatusOK, rec.Code)

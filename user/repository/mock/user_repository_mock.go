@@ -34,7 +34,7 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // GetByID mocks base method
-func (m *MockUserRepository) GetByID(id int) (*user.User, error) {
+func (m *MockUserRepository) GetByID(id int64) (*user.User, error) {
 	ret := m.ctrl.Call(m, "GetByID", id)
 	ret0, _ := ret[0].(*user.User)
 	ret1, _ := ret[1].(error)
@@ -59,23 +59,23 @@ func (mr *MockUserRepositoryMockRecorder) GetByEmail(email interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByEmail", reflect.TypeOf((*MockUserRepository)(nil).GetByEmail), email)
 }
 
-// GetPrivateDetailsByEmail mocks base method
-func (m *MockUserRepository) GetPrivateDetailsByEmail(email string) (*user.PrivateUserDetails, error) {
-	ret := m.ctrl.Call(m, "GetPrivateDetailsByEmail", email)
+// GetPrivateUserDetailsByEmail mocks base method
+func (m *MockUserRepository) GetPrivateUserDetailsByEmail(email string) (*user.PrivateUserDetails, error) {
+	ret := m.ctrl.Call(m, "GetPrivateUserDetailsByEmail", email)
 	ret0, _ := ret[0].(*user.PrivateUserDetails)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetPrivateDetailsByEmail indicates an expected call of GetPrivateDetailsByEmail
-func (mr *MockUserRepositoryMockRecorder) GetPrivateDetailsByEmail(email interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPrivateDetailsByEmail", reflect.TypeOf((*MockUserRepository)(nil).GetPrivateDetailsByEmail), email)
+// GetPrivateUserDetailsByEmail indicates an expected call of GetPrivateUserDetailsByEmail
+func (mr *MockUserRepositoryMockRecorder) GetPrivateUserDetailsByEmail(email interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPrivateUserDetailsByEmail", reflect.TypeOf((*MockUserRepository)(nil).GetPrivateUserDetailsByEmail), email)
 }
 
 // Create mocks base method
-func (m *MockUserRepository) Create(email, name, password string) (int, error) {
+func (m *MockUserRepository) Create(email, name, password string) (int64, error) {
 	ret := m.ctrl.Call(m, "Create", email, name, password)
-	ret0, _ := ret[0].(int)
+	ret0, _ := ret[0].(int64)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
